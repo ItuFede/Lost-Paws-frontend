@@ -17,43 +17,40 @@ const pinMB = L.icon({
   });
 
 const getDateByTimestamp = (timestamp) => {
-    const fecha = new Date(timestamp);
-    
+    const fecha = new Date(timestamp * 1000);
     const opciones = {
         timeZone: 'America/Argentina/Buenos_Aires',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+        second: '2-digit'
     };
-
-    const fechaHoraArgentina = fecha.toLocaleString('es-AR', opciones);
-
-    return fechaHoraArgentina;
+  
+    return fecha.toLocaleString('es-AR', opciones);
 }
 
 const PetCard = ({ pet }) => {
 
-    const hasLocations = pet.LocacionesVisto.length > 0;
+    const hasLocations = pet.missingReports[0].locationsView.length > 0;
     const centerPosition = hasLocations
-        ? [pet.LocacionesVisto[0].Latitud, pet.LocacionesVisto[0].Longitud]
+        ? [pet.missingReports[0].locationsView[0].Latitud, pet.missingReports[0].locationsView[0].Longitud]
         : null
 
     return (
         <Card
             style={{ width: '100%', maxWidth: '600px', marginBottom: '20px' }}
-            className={pet.Estado === 'ENCONTRADO' ? 'border-success' : 'border-danger'}
-            bg={pet.Estado === 'ENCONTRADO' ? 'success' : 'danger'}
+            className={pet.missingReports[0].state === 'FOUND' ? 'border-success' : 'border-danger'}
+            bg={pet.missingReports[0].state === 'FOUND' ? 'success' : 'danger'}
             text="white"
         >
             <Card.Header>
-                <strong>{pet.Estado}</strong>
+                <strong>{pet.missingReports[0].state === "LOST" ? "PERDIDO" : "ENCONTRADO"}</strong>
             </Card.Header>
             <Card.Body>
-                <Card.Title>{pet.Nombre}</Card.Title>
-                <Card.Text>{pet.Descripcion}</Card.Text>
+                <Card.Title>{pet.name}</Card.Title>
+                <Card.Text>{pet.description}</Card.Text>
                 {centerPosition && <MapContainer
                     center={centerPosition}
                     zoom={13}
@@ -64,7 +61,7 @@ const PetCard = ({ pet }) => {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                     {hasLocations && (
-                        pet.LocacionesVisto.map((loc, locIndex) => (
+                        pet.missingReports[0].locationsView.map((loc, locIndex) => (
                             <Marker position={[loc.Latitud, loc.Longitud]} icon={pinMB}>
                                 <Popup>
                                     Visto el {getDateByTimestamp(loc.Timestamp)}
@@ -77,8 +74,8 @@ const PetCard = ({ pet }) => {
                 }
             </Card.Body>
             <ListGroup variant="flush">
-                <ListGroup.Item><strong>Localidad:</strong> {pet.Localidad}</ListGroup.Item>
-                <ListGroup.Item><strong>Última ubicación:</strong> {hasLocations ? `${pet.LocacionesVisto[0].Latitud}, ${pet.LocacionesVisto[0].Longitud}` : 'No disponible'}</ListGroup.Item>
+                <ListGroup.Item><strong>Localidad:</strong> {pet.town}</ListGroup.Item>
+                <ListGroup.Item><strong>Última ubicación:</strong> {hasLocations ? `${pet.missingReports[0].locationsView[0].Latitud}, ${pet.missingReports[0].locationsView[0].Longitud}` : 'No disponible'}</ListGroup.Item>
             </ListGroup>
         </Card>
     );

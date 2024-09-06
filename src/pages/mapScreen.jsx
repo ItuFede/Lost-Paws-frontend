@@ -1,65 +1,78 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { fetchDataFromAPI } from "../services/api";
 import PetCard from "./Components/petCard";
+
+const API_GET_ENDPOINT = "https://w2xm8ky6b3.execute-api.us-east-1.amazonaws.com/prod/pets";
+const API_PUT_ENDPOINT = "https://w2xm8ky6b3.execute-api.us-east-1.amazonaws.com/prod/pets/lost";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-function getNewPosition(position) {
-  return {
-    "Latitud": position[0],
-    "Longitud": position[1],
-    "Timestamp": Date.now()
-  }
-}
-
-const MapScreen = ({ data }) => {
+const MapScreen = () => {
   const query = useQuery();
-  const [petsData, setPetsData] = useState(data);
+  const [petsData, setPetsData] = useState([]);
   const [position, setPosition] = useState(null);
+  const [observer, setObserver] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // TODO: Ver el tema del render y como se comporta el mapa
+  useEffect(() => {
+    const fetchData = async () => {
+        setError(false);
+        try {
+            const response = await fetchDataFromAPI("GET", API_GET_ENDPOINT);
+            // response.pets.map((pet) => {console.log("PET:::", pet)})
+            if (response.pets && Array.isArray(response.pets)) {
+              setPetsData(response.pets);
+              //setLoading(false);
+            } else {
+                throw new Error('Invalid JSON response');
+            }
+        } catch (error) {
+            console.error("Error fetching data: ", error);
+            setError(true);
+        } finally {
+          setLoading(false);
+        }
+    };
 
+    fetchData();
+  }, [observer]);
   
   useEffect(() => {
-    const petId = parseInt(query.get("id"));
-    const uPetId = query.get("uid");
-    if (petId && uPetId) {
+    const petId = query.get("id");
+    if (petId) {
       navigator.geolocation.getCurrentPosition(
-      (pos) => {
+        (pos) => {
         const { latitude, longitude } = pos.coords;
         setPosition([latitude, longitude]);
       },
-        (err) => {
-          console.error(err);
-          alert("No se pudo obtener la ubicación.");
-        }
+      (err) => {
+        console.error(err);
+        alert("No se pudo obtener la ubicación.");
+      }
       )
     }
   }, []);
-  
 
   useEffect(() => {
-    console.log(position)
-    if (position) {
-      console.log(position)
-      const petId = parseInt(query.get("id"));
-      const uPetId = query.get("uid");
-      if (petId && uPetId) {
-        setPetsData((prevPetsData) =>
-          prevPetsData.map((pet) =>
-            pet.Id === petId && pet.UniqueIdentifier === uPetId
-              ? {
-                  ...pet,
-                  Estado: "ENCONTRADO",
-                  LocacionesVisto: [...pet.LocacionesVisto, getNewPosition(position)],
-                }
-              : pet
-          )
-        );
+    const fetchData = async () => {
+      if (position) {
+        const petId = query.get("id");
+        const record = {
+          "id": petId,
+          "Latitud": position[0],
+          "Longitud": position[1]
+        }
+        console.log("record", record)
+        await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
+        setObserver(true)
       }
     }
+
+    fetchData();
   }, [position]);
 
   return (

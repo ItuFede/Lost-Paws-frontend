@@ -9,36 +9,15 @@ import NavBar from './pages/Components/navBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-const data = [
-    {
-        "Id": 1,
-        "UniqueIdentifier": "das84gqeg",
-        "Nombre": "Pancho",
-        "Estado": "PERDIDO",
-        "Localidad": "Bernal",
-        "LocacionesVisto": [],
-        "Descripcion": "Perro marrón, es amigable"
-    },
-    {
-        "Id": 2,
-        "UniqueIdentifier": "98fasSg45",
-        "Nombre": "Luna",
-        "Estado": "PERDIDO",
-        "Localidad": "Quilmes",
-        "LocacionesVisto": [],
-        "Descripcion": "Gata blanca, ojos verdes"
-    }
-];
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <NavBar />
       <Router>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<MapScreen />} />
           {/* <Route path='/paws' element={<Paws />} /> */}
-          <Route path='/paws' element={<MapScreen data={data}/>} />
+          <Route path='/paws' element={<MapScreen />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
