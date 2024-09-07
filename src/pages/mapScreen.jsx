@@ -31,6 +31,7 @@ const MapScreen = () => {
                 throw new Error('Invalid JSON response');
             }
         } catch (error) {
+            // no hay un manejo de error efectivo: Toast
             console.error("Error fetching data: ", error);
             setError(true);
         } finally {
@@ -51,6 +52,7 @@ const MapScreen = () => {
       },
       (err) => {
         console.error(err);
+        // porfi no uses alert (muere un perrito cada vez que lo usás)
         alert("No se pudo obtener la ubicación.");
       }
       )
@@ -66,8 +68,10 @@ const MapScreen = () => {
           "Latitud": position[0],
           "Longitud": position[1]
         }
+        //
         console.log("record", record)
         await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
+        //
         setObserver(true)
       }
     }

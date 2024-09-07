@@ -33,6 +33,7 @@ const getDateByTimestamp = (timestamp) => {
 
 const PetCard = ({ pet }) => {
 
+    // Estaría bueno tener un objeto que represente ese pet.missingReports[0], como que falta una abstracción
     const hasLocations = pet.missingReports[0].locationsView.length > 0;
     const centerPosition = hasLocations
         ? [pet.missingReports[0].locationsView[0].Latitud, pet.missingReports[0].locationsView[0].Longitud]
