@@ -1,0 +1,74 @@
+[
+  {
+    "id": "10ee03e2-acb8-4e6a-8f8a-05c7b5a892c7",
+    "description": "¡Gente, ayuda! Se me perdió Max, mi pastor alemán, por la plaza del maestro. Tiene cinco años, es grandote, negro y marrón con una manchita blanca en el pecho. Lleva un collar rojo, es re buenazo pero medio tímido con la gente que no conoce. Si alguien lo vio o sabe algo, por favor avísenme, ¡estamos desesperados!",
+    "isLost": "TRUE",
+    "missingReports": [
+      {
+        "locationsView": [
+          {
+            "Latitud": -34.706021,
+            "Longitud": -58.274941,
+            "Timestamp": 1725491095
+          }
+        ],
+        "missingDate": 1725491095,
+        "state": "LOST"
+      }
+    ],
+    "ownerId": 1,
+    "phoneNumberOwner": "+54 9 11 2345 8751",
+    "emailOwner": "robertoSarasa@gmail.com",
+    "name": "Max",
+    "animal": "DOG",
+    "town": "Bernal"
+  },
+  {
+    "id": "60ee03e2-acb8-4e6a-8f8a-05c7b5a892c9",
+    "description": "Luna es una perrita beagle de tres años. Su pelaje es tricolor, con predominancia de marrón, blanco y negro. Es de tamaño mediano, con orejas largas y caídas, y lleva un collar rosa con una pequeña placa en forma de hueso. Luna es muy juguetona y le encanta seguir olores. Se extravió cerca del barrio residencial el lunes por la tarde.",
+    "isLost": "TRUE",
+    "missingReports": [
+      {
+        "locationsView": [
+          {
+            "Latitud": -34.814911,
+            "Longitud": -58.463506,
+            "Timestamp": 1724915325
+          }
+        ],
+        "missingDate": 1724915325,
+        "state": "LOST"
+      }
+    ],
+    "ownerId": 2,
+    "phoneNumberOwner": "+54 9 11 4587-7124",
+    "emailOwner": "superEmail@gmail.com",
+    "name": "Luna",
+    "animal": "DOG",
+    "town": "Monte Grande"
+  },
+  {
+    "id": "40ee03e2-acb8-4e6a-8f8a-05c7b5a89333",
+    "description": "Oli es un gato siamés de dos años. Tiene ojos azules brillantes y un pelaje claro con extremidades marrones. Es de tamaño pequeño, delgado y lleva un collar verde con una campanita. Oliver es muy curioso y suele explorar los alrededores. Se perdió el martes por la noche cerca de la estacion de Bernal.",
+    "isLost": "TRUE",
+    "missingReports": [
+      {
+        "locationsView": [
+          {
+            "Latitud": -34.710631,
+            "Longitud": -58.279373,
+            "Timestamp": 1725280032
+          }
+        ],
+        "missingDate": 1725280032,
+        "state": "LOST"
+      }
+    ],
+    "ownerId": 3,
+    "phoneNumberOwner": "+54 9 11 4455-2277",
+    "emailOwner": "pabloFF2018@gmail.com",
+    "name": "Oliver",
+    "animal": "CAT",
+    "town": "Bernal"
+  }
+]
