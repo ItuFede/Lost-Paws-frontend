@@ -19,7 +19,7 @@ class Pet {
       locationsView: report.locationsView.map((location) => ({
         Latitud: location.Latitud,
         Longitud: location.Longitud,
-        Timestamp: new Date(location.Timestamp * 1000),
+        Timestamp: location.Timestamp,
       })),
     }));
     this.ownerId = ownerId;
