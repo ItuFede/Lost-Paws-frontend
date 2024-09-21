@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { fetchDataFromAPI } from "../services/api";
+import { updatePet, getPets } from "../services/api";
 import PetCard from "./Components/petCard";
 import Toaster from "./Components/toaster";
 import { convertJsonToPet } from "../utils/helper";
-
-const API_GET_ENDPOINT = import.meta.env.VITE_API_GET_ENDPOINT;
-const API_PUT_ENDPOINT = import.meta.env.VITE_API_PUT_ENDPOINT;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -26,7 +23,7 @@ const MapScreen = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetchDataFromAPI("GET", API_GET_ENDPOINT);
+      const response = await getPets();
 
       if (!response.error) {
         setPetsData(response.pets);
@@ -67,7 +64,7 @@ const MapScreen = () => {
           Longitud: position[1],
         };
         console.log("record", record);
-        await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
+        await updatePet(record);
         setObserver(true);
       }
     };

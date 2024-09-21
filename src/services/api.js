@@ -1,11 +1,9 @@
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-//TODO: Crear fetch por cada request y no uno generico
-export const fetchDataFromAPI = async (
-  method = "GET",
-  endpoint,
-  body = null
-) => {
+const API_GET_ENDPOINT = import.meta.env.VITE_API_GET_ENDPOINT;
+const API_PUT_ENDPOINT = import.meta.env.VITE_API_PUT_ENDPOINT;
+
+const fetchDataFromAPI = async (method = "GET", endpoint, body = null) => {
   const response = await fetch(endpoint, {
     method,
     headers: {
@@ -26,4 +24,12 @@ export const fetchDataFromAPI = async (
   }
 
   return await response.json();
+};
+
+export const getPets = async () => {
+  return await fetchDataFromAPI("GET", API_GET_ENDPOINT);
+};
+
+export const updatePet = async (record) => {
+  return await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
 };
