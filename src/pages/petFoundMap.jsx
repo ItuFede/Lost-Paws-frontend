@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PetInfoMap from "./Components/petInfoMap";
 import Toaster from "./Components/toaster";
+import { getPet, updatePet } from "../services/api";
 import { convertJsonToPet } from "../utils/helper";
 
 const PetFoundMap = () => {
@@ -16,35 +17,20 @@ const PetFoundMap = () => {
     setTimeout(() => setToast(null), 5000);
   };
 
+  const validateUUID = (uuid) => {
+    const regexUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return regexUUID.test(uuid);
+  };
+
   useEffect(() => {
     const fetchPetData = async () => {
-      const mockData = {
-        id: "10ee03e2-acb8-4e6a-8f8a-05c7b5a892c7",
-        description:
-          "¡Gente, ayuda! Se me perdió Max, mi pastor alemán, por la plaza del maestro. Tiene cinco años, es grandote, negro y marrón con una manchita blanca en el pecho. Lleva un collar rojo, es re buenazo pero medio tímido con la gente que no conoce. Si alguien lo vio o sabe algo, por favor avísenme, ¡estamos desesperados!",
-        isLost: "TRUE",
-        phoneNumberOwner: "11 2244-8866",
-        missingReport: {
-          locationsView: [
-            {
-              latitude: -34.706021,
-              longitude: -58.274941,
-              timestamp: 1725491095,
-            },
-            {
-              latitude: -34.708454,
-              longitude: -58.269369,
-              timestamp: 1725702000,
-            },
-          ],
-          missingDate: 1725491095,
-          state: "LOST",
-        },
-        ownerId: 1,
-        name: "Max",
-        animal: "DOG",
-        town: "Bernal",
-      };
+      const validUUID = validateUUID(petId);
+
+      if (validUUID) {
+        const response = await getPet(petId);
+        setPetData(convertJsonToPet(response.pet));
+      }
 
       if (petId) {
         navigator.geolocation.getCurrentPosition(
@@ -58,8 +44,6 @@ const PetFoundMap = () => {
           }
         );
       }
-
-      setPetData(convertJsonToPet(mockData));
     };
 
     fetchPetData();
@@ -67,17 +51,14 @@ const PetFoundMap = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (position) {
-        //const petId = query.get("id");
-        /*
+      if (position && petData) {
         const record = {
           id: petId,
-          Latitud: position[0],
-          Longitud: position[1],
+          latitude: position[0],
+          longitude: position[1],
         };
-        console.log("record", record);
-        */
-        //await updatePet(record);
+        console.log("record:::", record);
+        await updatePet(record);
 
         const locations = petData.getLocations();
 

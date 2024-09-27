@@ -30,6 +30,10 @@ export const getPets = async () => {
   return await fetchDataFromAPI("GET", API_GET_ENDPOINT);
 };
 
+export const getPet = async (id) => {
+  return await fetchDataFromAPI("GET", API_GET_ENDPOINT + "/" + id);
+};
+
 export const updatePet = async (record) => {
   return await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
 };
