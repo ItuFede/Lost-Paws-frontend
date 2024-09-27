@@ -3,7 +3,7 @@ class Pet {
     id,
     description,
     isLost,
-    missingReports,
+    missingReport,
     ownerId,
     phoneNumberOwner,
     emailOwner,
@@ -14,14 +14,7 @@ class Pet {
     this.id = id;
     this.description = description;
     this.isLost = isLost === "TRUE";
-    this.missingReports = missingReports.map((report) => ({
-      ...report,
-      locationsView: report.locationsView.map((location) => ({
-        Latitud: location.Latitud,
-        Longitud: location.Longitud,
-        Timestamp: location.Timestamp,
-      })),
-    }));
+    this.missingReport = missingReport;
     this.ownerId = ownerId;
     this.phoneNumberOwner = phoneNumberOwner;
     this.emailOwner = emailOwner;
@@ -30,24 +23,37 @@ class Pet {
     this.town = town;
   }
 
-  getLatitude() {
-    return this.missingReports[0].locationsView[0].Latitud;
+  getLatitude(pos) {
+    console.log("getLatitude:::", this.missingReport);
+    return this.missingReport.locationsView[pos].latitude;
   }
 
-  getLongitud() {
-    return this.missingReports[0].locationsView[0].Longitud;
+  getLongitude(pos) {
+    return this.missingReport.locationsView[pos].longitude;
   }
 
   hasLocations() {
-    return this.missingReports[0].locationsView.length > 0;
+    return this.missingReport.locationsView.length > 0;
   }
 
   getLocations() {
-    return this.missingReports[0].locationsView;
+    return this.missingReport.locationsView;
+  }
+
+  getFirstLostLocation() {
+    return [this.getLatitude(0), this.getLongitude(0)];
+  }
+
+  getPositionPos(index) {
+    return this.missingReport.locationsView[index].timestamp;
   }
 
   getMissingState() {
-    return this.missingReports[0].state;
+    return this.missingReport.state;
+  }
+
+  getAnimalType() {
+    return this.animal == "CAT" ? "GATO" : "PERRO";
   }
 }
 

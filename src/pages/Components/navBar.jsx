@@ -1,5 +1,5 @@
-// src/components/NavBar.js
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom"; // Importa useLocation
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -17,11 +17,12 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PetsIcon from "@mui/icons-material/Pets";
 import ClinicIcon from "@mui/icons-material/LocalHospital";
 import AdoptionIcon from "@mui/icons-material/VolunteerActivism";
-// import LostAndPawsPNG from "../../assets/images/logo_svg.svg";
 import LostAndPawsPNG from "../../assets/images/logo2.png";
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleOpenUserMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -31,8 +32,19 @@ const NavBar = () => {
     setAnchorEl(null);
   };
 
+  const goToLostPage = () => {
+    navigate("/pet/lost");
+  };
+
+  const goToHomePage = () => {
+    navigate("/");
+  };
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#A0D468" }}>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "#2E7D32", height: "8vh" }}
+    >
       <Toolbar>
         <IconButton
           edge="start"
@@ -44,6 +56,7 @@ const NavBar = () => {
             src={LostAndPawsPNG}
             alt="Lost & Paws"
             style={{ width: 60, height: 60 }}
+            onClick={goToHomePage}
           />
         </IconButton>
         <Typography
@@ -55,11 +68,20 @@ const NavBar = () => {
         </Typography>
 
         {/* Categorias */}
-        <Box sx={{ display: "flex", flexGrow: 1 }}>
-          <Button color="inherit" startIcon={<PetsIcon />} sx={{ mr: 2 }}>
+        <Box sx={{ display: "flex", flexGrow: 1, gap: 8 }}>
+          <Button
+            color="inherit"
+            startIcon={<PetsIcon />}
+            sx={{
+              border:
+                location.pathname === "/lost" ? "2px solid black" : "none",
+              borderRadius: "4px",
+            }}
+            onClick={goToLostPage}
+          >
             Perdidos
           </Button>
-          <Button color="inherit" startIcon={<ClinicIcon />} sx={{ mr: 2 }}>
+          <Button color="inherit" startIcon={<ClinicIcon />}>
             Veterinarias
           </Button>
           <Button color="inherit" startIcon={<AdoptionIcon />}>
