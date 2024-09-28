@@ -17,9 +17,11 @@ const fetchDataFromAPI = async (method = "GET", endpoint, body = null) => {
 
   if (!response.ok) {
     if (response.status >= 400 && response.statusText < 500) {
-      response.error = `Error del cliente: ${response.status} ${response.statusText}`;
+      // response.error = `Error del cliente: ${response.status} ${response.statusText}`;
+      throw new Error({ message: response.body.message, userError: true })
     } else if (response.status >= 500 && response.status < 600) {
       console.error("ERROR INTERNO:::", response);
+      throw new Error({ message: response.body.message, userError: false })
     }
   }
 

@@ -63,13 +63,14 @@ const PetsMap = () => {
   };
 
   const fetchData = async () => {
-    const response = await getPets();
-
-    if (!response.error) {
+    try {
+      const response = await getPets();
       setPetsData(response.pets.map((pet) => convertJsonToPet(pet)));
-    } else {
+      // const pets = await getPets();
+      // setPetsData(pets);
+    } catch (e) {
       showToast(
-        `Error al buscar las mascotas perdidas: ${response.error}`,
+        `Error al buscar las mascotas perdidas: ${e.userError ? e.message : 'consulte al administrador del sistema'}`,
         "error"
       );
     }
@@ -131,9 +132,7 @@ const PetsMap = () => {
     setModalContent(marker);
     setOpen(true);
     const map = mapRef.current;
-    if (map) {
-      map.flyTo(marker.position, 16); // Hacer zoom al marcador sin cambiar la ubicación
-    }
+    map?.flyTo(marker.position, 16); // Hacer zoom al marcador sin cambiar la ubicación
   };
 
   return (
