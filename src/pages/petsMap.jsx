@@ -8,6 +8,9 @@ import RadiusSlider from "./Components/radiusSlider";
 import MarkerInfoDialog from "./Components/markerInfoDialog";
 import { getPets, getPetImages } from "../services/api";
 import { convertJsonToPet } from "../utils/helper";
+import useErrorHandling from "./hooks/useErrorHandling";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function LocationMarker({ position, radius }) {
   const map = useMap();
@@ -45,6 +48,7 @@ function AdditionalMarkers({ markers, onMarkerClick }) {
 }
 
 const PetsMap = () => {
+  const { handleError } = useErrorHandling();
   const [petsData, setPetsData] = useState([]);
   const [position, setPosition] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,13 +63,12 @@ const PetsMap = () => {
     try {
       const response = await getPets();
       setPetsData(response.pets.map((pet) => convertJsonToPet(pet)));
-      // const pets = await getPets();
-      // setPetsData(pets);
     } catch (e) {
-      showToast(
-        `Error al buscar las mascotas perdidas: ${e.userError ? e.message : 'consulte al administrador del sistema'}`,
-        "error"
-      );
+      handleError({
+        errorMessage: `Al buscar las mascotas perdidas: ${
+          e.userError ? e.message : "consulte al administrador del sistema"
+        }`,
+      });
     }
   };
 
@@ -182,6 +185,7 @@ const PetsMap = () => {
         onClose={handleClose}
         modalContent={modalContent}
       />
+      <ToastContainer />
     </Box>
   );
 };
