@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PetInfoMap from "./Components/petInfoMap";
-import Toaster from "./Components/toaster";
 import { getPet, updatePet } from "../services/api";
 import { convertJsonToPet } from "../utils/helper";
+import useErrorHandling from "./hooks/useErrorHandling";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PetFoundMap = () => {
+  const { handleError } = useErrorHandling();
   const { petId } = useParams();
   const [petData, setPetData] = useState(null);
   const [position, setPosition] = useState(null);
-  const [toast, setToast] = useState(null);
-
-  //TODO: Move to utils
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 5000);
-  };
 
   const validateUUID = (uuid) => {
     const regexUUID =
@@ -29,7 +25,15 @@ const PetFoundMap = () => {
 
       if (validUUID) {
         const response = await getPet(petId);
+
+        if (response.error) {
+          handleError({ errorMessage: response.error });
+          return;
+        }
+
         setPetData(convertJsonToPet(response.pet));
+      } else {
+        handleError({ errorMessage: "UUID no valido" });
       }
 
       if (petId) {
@@ -40,7 +44,7 @@ const PetFoundMap = () => {
           },
           (err) => {
             console.error(err);
-            showToast("No se pudo obtener la ubicación.", "error");
+            handleError({ errorMessage: "No se pudo obtener la ubicación." });
           }
         );
       }
@@ -57,8 +61,14 @@ const PetFoundMap = () => {
           latitude: position[0],
           longitude: position[1],
         };
-        console.log("record:::", record);
-        await updatePet(record);
+
+        try {
+          console.log("record:::", record);
+          await updatePet(record);
+        } catch (error) {
+          handleError("Error al actualizar la mascota");
+          return;
+        }
 
         const locations = petData.getLocations();
 
@@ -82,19 +92,18 @@ const PetFoundMap = () => {
     fetchData();
   }, [position]);
 
-  if (!petData) return <div>Cargando información...</div>;
+  if (!petData)
+    return (
+      <div>
+        Cargando información...
+        <ToastContainer />
+      </div>
+    );
 
   return (
     <div>
+      <ToastContainer />
       <PetInfoMap petData={petData} />
-      {toast && (
-        <Toaster
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
-      ;
     </div>
   );
 };

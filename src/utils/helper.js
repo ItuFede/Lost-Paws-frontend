@@ -1,7 +1,12 @@
 import Pet from "../models/pet";
+import Vet from "../models/vet";
 
 export function convertJsonToPet(jsonObject) {
   return new Pet(jsonObject);
+}
+
+export function convertJsonToVet(jsonObject) {
+  return new Vet(jsonObject);
 }
 
 export const getDistance = (lat1, lon1, lat2, lon2) => {

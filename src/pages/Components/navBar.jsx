@@ -36,6 +36,10 @@ const NavBar = () => {
     navigate("/pet/lost");
   };
 
+  const goToVetsPage = () => {
+    navigate("/vet");
+  };
+
   const goToHomePage = () => {
     navigate("/");
   };
@@ -74,14 +78,22 @@ const NavBar = () => {
             startIcon={<PetsIcon />}
             sx={{
               border:
-                location.pathname === "/lost" ? "2px solid black" : "none",
+                location.pathname === "/pet/lost" ? "2px solid black" : "none",
               borderRadius: "4px",
             }}
             onClick={goToLostPage}
           >
             Perdidos
           </Button>
-          <Button color="inherit" startIcon={<ClinicIcon />}>
+          <Button
+            color="inherit"
+            startIcon={<ClinicIcon />}
+            sx={{
+              border: location.pathname === "/vet" ? "2px solid black" : "none",
+              borderRadius: "4px",
+            }}
+            onClick={goToVetsPage}
+          >
             Veterinarias
           </Button>
           <Button color="inherit" startIcon={<AdoptionIcon />}>

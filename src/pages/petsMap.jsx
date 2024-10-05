@@ -6,8 +6,7 @@ import "leaflet/dist/leaflet.css";
 import MarkerList from "./Components/markerList";
 import RadiusSlider from "./Components/radiusSlider";
 import MarkerInfoDialog from "./Components/markerInfoDialog";
-import { getPets } from "../services/api";
-import Toaster from "./Components/toaster";
+import { getPets, getPetImages } from "../services/api";
 import { convertJsonToPet } from "../utils/helper";
 
 function LocationMarker({ position, radius }) {
@@ -53,14 +52,8 @@ const PetsMap = () => {
   const [modalContent, setModalContent] = useState({});
   const [filteredMarkers, setFilteredMarkers] = useState([]);
   const [radius, setRadius] = useState(500); // Radio inicial en metros
-  const [toast, setToast] = useState(null);
 
   const mapRef = useRef(); // Referencia al mapa
-
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 5000);
-  };
 
   const fetchData = async () => {
     const response = await getPets();
@@ -81,7 +74,9 @@ const PetsMap = () => {
       (location) => {
         fetchData();
         const { latitude, longitude } = location.coords;
-        setPosition([latitude, longitude]);
+        //setPosition([latitude, longitude]);
+        //TODO: Delete Mock
+        setPosition([-34.710811, -58.292755]);
         setLoading(false);
       },
       () => {
@@ -105,13 +100,14 @@ const PetsMap = () => {
       });
 
       const markers = filtered.map((pet, index) => ({
+        idPet: pet.id,
         position: pet.getFirstLostLocation(),
         name: pet.name,
         zone: pet.town,
         animal: pet.getAnimalType(),
         description: pet.description,
         phone: pet.phoneNumberOwner,
-        images: [], //TODO: S3 Service
+        images: [],
       }));
 
       setFilteredMarkers(markers);
@@ -127,7 +123,9 @@ const PetsMap = () => {
     setOpen(false);
   };
 
-  const handleCardClick = (marker) => {
+  const handleCardClick = async (marker) => {
+    const markerImages = await getPetImages(marker.idPet);
+    marker.images = markerImages;
     setModalContent(marker);
     setOpen(true);
     const map = mapRef.current;
