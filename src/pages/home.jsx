@@ -65,7 +65,7 @@ const Home = () => {
           elevation={3}
           sx={{
             padding: 3,
-            backgroundColor: "#A0D468",
+            backgroundColor: "#66BB6A",
             textAlign: "center",
             width: { xs: "100%", sm: "30%" },
           }}

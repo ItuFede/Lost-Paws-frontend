@@ -40,7 +40,8 @@ const PetFoundMap = () => {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             const { latitude, longitude } = pos.coords;
-            setPosition([latitude, longitude]);
+            //setPosition([latitude, longitude]);
+            setPosition([-34.710811, -58.292755]);
           },
           (err) => {
             console.error(err);
