@@ -18,20 +18,23 @@ import { getUserPetsInfo } from "../services/api";
 const UserPetInfo = () => {
   const [userPets, setUserPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndexes, setCurrentIndexes] = useState({});
 
   const handleNext = (petIndex) => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex + 1) % userPets[petIndex].images.length
-    );
+    setCurrentIndexes((prevIndexes) => ({
+      ...prevIndexes,
+      [petIndex]:
+        (prevIndexes[petIndex] + 1) % userPets[petIndex].images.length,
+    }));
   };
 
   const handlePrev = (petIndex) => {
-    setCurrentIndex(
-      (prevIndex) =>
-        (prevIndex - 1 + userPets[petIndex].images.length) %
-        userPets[petIndex].images.length
-    );
+    setCurrentIndexes((prevIndexes) => ({
+      ...prevIndexes,
+      [petIndex]:
+        (prevIndexes[petIndex] - 1 + userPets[petIndex].images.length) %
+        userPets[petIndex].images.length,
+    }));
   };
 
   useEffect(() => {
@@ -47,6 +50,12 @@ const UserPetInfo = () => {
 
       setUserPets(userPets);
       setLoading(false);
+
+      const initialIndexes = userPets.reduce((acc, _, index) => {
+        acc[index] = 0;
+        return acc;
+      }, {});
+      setCurrentIndexes(initialIndexes);
     };
 
     getUserPets();
@@ -180,8 +189,8 @@ const UserPetInfo = () => {
 
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                       <img
-                        src={pet.images[currentIndex]}
-                        alt={`Imagen ${currentIndex + 1}`}
+                        src={pet.images[currentIndexes[index]]} // Usa el índice específico de cada mascota
+                        alt={`Imagen ${currentIndexes[index] + 1}`}
                         style={{
                           width: "100%",
                           maxWidth: "250px",
