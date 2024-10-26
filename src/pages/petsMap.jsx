@@ -1,13 +1,12 @@
 import { getDistance } from "../utils/helper";
 import React, { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Circle, Marker, useMap } from "react-leaflet";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import MarkerList from "./Components/markerList";
 import RadiusSlider from "./Components/radiusSlider";
 import MarkerInfoDialog from "./Components/markerInfoDialog";
 import { getPets, getPetImages } from "../services/api";
-import { convertJsonToPet } from "../utils/helper";
 import useErrorHandling from "./hooks/useErrorHandling";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,12 +56,11 @@ const PetsMap = () => {
   const [filteredMarkers, setFilteredMarkers] = useState([]);
   const [radius, setRadius] = useState(500); // Radio inicial en metros
 
-  const mapRef = useRef(); // Referencia al mapa
+  const mapRef = useRef();
 
   const fetchData = async () => {
     try {
-      const response = await getPets();
-      setPetsData(response.pets.map((pet) => convertJsonToPet(pet)));
+      setPetsData(await getPets());
     } catch (e) {
       handleError({
         errorMessage: `Al buscar las mascotas perdidas: ${
@@ -136,18 +134,16 @@ const PetsMap = () => {
     map?.flyTo(marker.position, 16); // Hacer zoom al marcador sin cambiar la ubicación
   };
 
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
-    <Box sx={{ display: "flex", height: "86vh" }}>
-      <Box
-        sx={{
-          width: "300px",
-          borderRight: "1px solid #ddd",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <MarkerList markers={filteredMarkers} onCardClick={handleCardClick} />
-      </Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        height: "86vh",
+      }}
+    >
       <Box sx={{ flex: 1 }}>
         {loading ? (
           <Box
@@ -163,7 +159,7 @@ const PetsMap = () => {
         ) : (
           <Box sx={{ position: "relative", height: "86vh" }}>
             <MapContainer
-              ref={mapRef} // Asignar la referencia al mapa
+              ref={mapRef}
               center={position || [-34.603715, -58.381631]}
               zoom={13}
               style={{ height: "100%", width: "100%" }}
@@ -178,6 +174,17 @@ const PetsMap = () => {
             <RadiusSlider radius={radius} setRadius={setRadius} />
           </Box>
         )}
+      </Box>
+
+      <Box
+        sx={{
+          width: "300px",
+          borderLeft: "1px solid #ddd",
+          display: isMobile ? "none" : "flex",
+          flexDirection: "column",
+        }}
+      >
+        <MarkerList markers={filteredMarkers} onCardClick={handleCardClick} />
       </Box>
 
       <MarkerInfoDialog

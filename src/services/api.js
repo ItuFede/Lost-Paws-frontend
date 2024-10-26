@@ -1,3 +1,5 @@
+import { convertJsonToPet } from "../utils/helper";
+
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 const API_BASE_ENDPOINT = import.meta.env.VITE_API_BASE_ENDPOINT;
@@ -57,7 +59,8 @@ const fetchDataFromAPI = async (method = "GET", endpoint, body = null) => {
 };
 
 export const getPets = async () => {
-  return await fetchDataFromAPI("GET", API_GET_ENDPOINT);
+  const response = await fetchDataFromAPI("GET", API_GET_ENDPOINT);
+  return response.pets.map((pet) => convertJsonToPet(pet));
 };
 
 export const getVets = async () => {
@@ -65,7 +68,8 @@ export const getVets = async () => {
 };
 
 export const getPet = async (id) => {
-  return await fetchDataFromAPI("GET", API_GET_ENDPOINT + "/" + id);
+  const response = await fetchDataFromAPI("GET", API_GET_ENDPOINT + "/" + id);
+  return convertJsonToPet(response.pet);
 };
 
 export const getPetImages = async (id) => {

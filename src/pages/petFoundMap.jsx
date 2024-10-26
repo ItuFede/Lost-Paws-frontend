@@ -24,14 +24,7 @@ const PetFoundMap = () => {
       const validUUID = validateUUID(petId);
 
       if (validUUID) {
-        const response = await getPet(petId);
-
-        if (response.error) {
-          handleError({ errorMessage: response.error });
-          return;
-        }
-
-        setPetData(convertJsonToPet(response.pet));
+        setPetData(await getPet(petId));
       } else {
         handleError({ errorMessage: "UUID no valido" });
       }

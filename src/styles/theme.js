@@ -9,6 +9,10 @@ const theme = createTheme({
       main: "#98c282",
     },
   },
+  typography: {
+    fontFamily:
+      'Rubik, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  },
 });
 
 export default theme;
