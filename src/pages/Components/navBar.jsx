@@ -145,6 +145,14 @@ const NavBar = () => {
           open={mobileMenuOpen}
           onClose={toggleMobileMenu}
           sx={{ display: { xs: "block", md: "none" } }}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
         >
           <MenuItem onClick={goToLostPage}>Perdidos</MenuItem>
           <MenuItem onClick={goToVetsPage}>Veterinarias</MenuItem>
@@ -197,7 +205,8 @@ const NavBar = () => {
           >
             Veterinarias
           </Button>
-          <Button
+
+          {/* <Button
             color="inherit"
             startIcon={<AdoptionIcon />}
             sx={{
@@ -208,7 +217,7 @@ const NavBar = () => {
             }}
           >
             Adopción
-          </Button>
+          </Button> */}
         </Box>
 
         {/* Usuario o Login */}

@@ -8,6 +8,7 @@ import VetsMap from "./pages/vetsMap";
 import UserInfo from "./pages/userInfo";
 import UserPetsInfo from "./pages/userPetsInfo";
 import PetFoundMap from "./pages/petFoundMap";
+import RegisterPetForm from "./pages/registerPetForm";
 import NotFound from "./pages/notFound";
 import NavBar from "./pages/Components/navBar";
 import Footer from "./pages/Components/footer";
@@ -36,6 +37,7 @@ function App() {
               {/* TODO: Esto tiene que estar protegido (USER)*/}
               <Route path="/user" element={<UserInfo />} />
               <Route path="/user/pet" element={<UserPetsInfo />} />
+              <Route path="/pet/register" element={<RegisterPetForm />} />
               <Route path="/pet/lost" element={<PetsMap />} />
               <Route path="/vet" element={<VetsMap />} />
               {/* <ProtectedRoute path="/vet" component={VetsMap} /> */}

@@ -14,11 +14,17 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { convertJsonToPet } from "../utils/helper";
 import { getUserPetsInfo } from "../services/api";
+import { QRCodeCanvas } from "qrcode.react";
+import { useNavigate } from "react-router-dom";
 
 const UserPetInfo = () => {
   const [userPets, setUserPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentIndexes, setCurrentIndexes] = useState({});
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [qrStringValue, setQrStringValue] = useState("");
+
+  const navigate = useNavigate();
 
   const handleNext = (petIndex) => {
     setCurrentIndexes((prevIndexes) => ({
@@ -61,8 +67,9 @@ const UserPetInfo = () => {
     getUserPets();
   }, []);
 
-  const handleQRCodeClick = (nombre) => {
-    alert(`Mostrando QR para ${nombre}`);
+  const handleQRCodeClick = (qrString) => {
+    setQrStringValue(qrString);
+    setShowQRCode(true);
   };
 
   if (loading) {
@@ -92,6 +99,13 @@ const UserPetInfo = () => {
         <Typography variant="h6" color="text.secondary">
           No cuentas con mascotas registradas por el momento.
         </Typography>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/pet/register")}
+          sx={{ marginTop: 2 }}
+        >
+          Agregar Mascota
+        </Button>
       </Box>
     );
   }
@@ -104,6 +118,14 @@ const UserPetInfo = () => {
       justifyContent="center"
       sx={{ marginTop: 4 }}
     >
+      <Button
+        variant="contained"
+        onClick={() => navigate("/pet/register")}
+        sx={{ marginBottom: 2 }}
+      >
+        Agregar Mascota
+      </Button>
+
       <Grid container spacing={2} justifyContent="center">
         {userPets.map((pet, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
@@ -189,7 +211,7 @@ const UserPetInfo = () => {
 
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                       <img
-                        src={pet.images[currentIndexes[index]]} // Usa el índice específico de cada mascota
+                        src={pet.images[currentIndexes[index]]}
                         alt={`Imagen ${currentIndexes[index] + 1}`}
                         style={{
                           width: "100%",
@@ -221,7 +243,11 @@ const UserPetInfo = () => {
 
                 <Button
                   variant="contained"
-                  onClick={() => handleQRCodeClick(pet.name)}
+                  onClick={() =>
+                    handleQRCodeClick(
+                      "http://localhost:5173/#/pet/found/" + pet.id
+                    )
+                  }
                   sx={{ marginTop: 2, width: "100%" }}
                 >
                   Ver QR
@@ -231,8 +257,39 @@ const UserPetInfo = () => {
           </Grid>
         ))}
       </Grid>
+
+      {showQRCode && (
+        <QRCodeComponent
+          qrStringValue={qrStringValue}
+          onClose={() => setShowQRCode(false)}
+        />
+      )}
     </Box>
   );
 };
+
+const QRCodeComponent = ({ qrStringValue, onClose }) => (
+  <Box
+    display="flex"
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    sx={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0, 0, 0, 0.8)",
+      zIndex: 1000,
+    }}
+    onClick={onClose}
+  >
+    <QRCodeCanvas value={qrStringValue} size={200} />
+    <Typography variant="h6" color="white" sx={{ marginTop: 2 }}>
+      Escanea el código QR
+    </Typography>
+  </Box>
+);
 
 export default UserPetInfo;
