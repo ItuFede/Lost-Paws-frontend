@@ -1,5 +1,6 @@
 import Pet from "../models/pet";
 import Vet from "../models/vet";
+import imageCompression from "browser-image-compression";
 
 export function convertJsonToPet(jsonObject) {
   return new Pet(jsonObject);
@@ -35,4 +36,51 @@ export const getDateByTimestamp = (timestamp) => {
   };
 
   return fecha.toLocaleString("es-AR", opciones);
+};
+
+export const compressImage = async (file) => {
+  const options = {
+    maxWidthOrHeight: 720, // Define el ancho máximo
+    useWebWorker: true, // Usa web worker para mejorar el rendimiento
+    maxSizeMB: 1, // Tamaño máximo en MB (ajústalo según tus necesidades)
+    maxIteration: 3, // Límite de iteración para intentar comprimir más
+    initialQuality: 0.8, // Calidad inicial (ajústala si necesitas menos peso)
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+    return compressedFile;
+  } catch (error) {
+    console.error("Error al comprimir la imagen:", error);
+  }
+};
+
+export const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+export const isTokenExpired = (token) => {
+  if (!token) return true;
+  const { exp } = JSON.parse(atob(token.split(".")[1]));
+  const currentTime = Math.floor(Date.now() / 1000);
+  return currentTime > exp;
+};
+
+export const getTokenExpiryTime = (token) => {
+  if (!token) return null;
+
+  try {
+    const payloadBase64 = token.split(".")[1];
+    const decodedPayload = JSON.parse(atob(payloadBase64));
+
+    return decodedPayload.exp * 1000; // Convertir a milisegundos
+  } catch (error) {
+    console.error("Error al decodificar el token:", error);
+    return null;
+  }
 };

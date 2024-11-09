@@ -1,0 +1,31 @@
+/* petsMap.css */
+
+.mapBorder {
+  display: flex;
+  flex-direction: var(--flex-direction, row);
+  height: 86vh;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.map-container {
+  position: relative;
+  height: 86vh;
+}
+
+.side-panel {
+  width: 300px;
+  border-left: 1px solid #ddd;
+  display: var(--side-panel-display, flex);
+  flex-direction: column;
+}
+
+.map-wrapper {
+  height: 100%;
+  width: 100%;
+}

@@ -9,7 +9,8 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import { getUserInfo, updateUserInfo } from "../services/api";
+import { getUserInfo, updateUserInfo } from "./../../services/api";
+import "./userInfo.css";
 
 const UserInfo = () => {
   const [user, setUser] = useState({
@@ -48,9 +49,7 @@ const UserInfo = () => {
     getUser();
   }, []);
 
-  const handleEditClick = async () => {
-    setIsEditing(true);
-  };
+  const handleEditClick = () => setIsEditing(true);
 
   const handleConfirmClick = async () => {
     const auth = localStorage.getItem("authData");
@@ -77,13 +76,8 @@ const UserInfo = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="sm" style={{ marginTop: "50px" }}>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="100vh"
-        >
+      <Container maxWidth="sm" className="user-info-container">
+        <Box className="loading-box">
           <CircularProgress />
         </Box>
       </Container>
@@ -91,8 +85,8 @@ const UserInfo = () => {
   }
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "50px" }}>
-      <Paper elevation={3} style={{ padding: "20px" }}>
+    <Container maxWidth="sm" className="user-info-container">
+      <Paper elevation={3} className="user-info-paper">
         <Typography variant="h5" gutterBottom>
           Información del Usuario
         </Typography>
@@ -115,7 +109,11 @@ const UserInfo = () => {
             fullWidth
           />
 
-          <Typography variant="h6" gutterBottom>
+          <Typography
+            variant="h6"
+            gutterBottom
+            className="social-media-heading"
+          >
             Redes Sociales
           </Typography>
 
@@ -148,7 +146,7 @@ const UserInfo = () => {
           direction="row"
           justifyContent="center"
           spacing={2}
-          marginTop={2}
+          className="button-stack"
         >
           {!isEditing ? (
             <Button

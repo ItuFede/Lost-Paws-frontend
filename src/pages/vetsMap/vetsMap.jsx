@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Circle, Marker, useMap } from "react-leaflet";
 import { Box, CircularProgress } from "@mui/material";
 import "leaflet/dist/leaflet.css";
-import { getVets, getVetLogo } from "../services/api";
-import { convertJsonToVet } from "../utils/helper";
-import VetInfoDialog from "./Components/vetInfoDialog";
+import { getVets, getVetLogo } from "../../services/api";
+import { convertJsonToVet } from "../../utils/helper";
+import VetInfoDialog from "../Components/vetInfoDialog";
+import "./vetsMap.css";
 
 function LocationMarker({ position }) {
   const map = useMap();
@@ -60,9 +61,9 @@ const VetsMap = () => {
       (location) => {
         fetchData();
         const { latitude, longitude } = location.coords;
-        //setPosition([latitude, longitude]);
+        setPosition([latitude, longitude]);
         //TODO: Delete Mock
-        setPosition([-34.710811, -58.292755]);
+        //setPosition([-34.710811, -58.292755]); //MOCK
         setLoading(false);
       },
       () => {
@@ -108,26 +109,19 @@ const VetsMap = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "86vh" }}>
+    <Box className="box-main">
       <Box sx={{ flex: 1 }}>
         {loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
+          <Box className="box-loading">
             <CircularProgress />
           </Box>
         ) : (
-          <Box sx={{ position: "relative", height: "86vh" }}>
+          <Box className="box-map-container">
             <MapContainer
               ref={mapRef} // Asignar la referencia al mapa
               center={position || [-34.603715, -58.381631]}
               zoom={13}
-              style={{ height: "100%", width: "100%" }}
+              className="map-container"
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <LocationMarker position={position} />

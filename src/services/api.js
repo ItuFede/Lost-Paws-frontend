@@ -87,6 +87,21 @@ export const authUser = async (code) => {
   );
 };
 
+export const refreshToken = async (token) => {
+  const tokenParse = JSON.parse(token);
+  console.log("tokenParse", tokenParse);
+  console.log("tokenParse.refreshToken", tokenParse.refreshToken);
+  const fetch = await fetchDataFromCognito(
+    "POST",
+    API_BASE_ENDPOINT + "/refresh",
+    tokenParse.accessToken,
+    tokenParse.idToken,
+    { refreshToken: tokenParse.refreshToken }
+  );
+  console.log("refreshToken", fetch);
+  return fetch;
+};
+
 export const getUserInfo = async (token) => {
   const tokenParse = JSON.parse(token);
   const fetch = await fetchDataFromCognito(
@@ -124,4 +139,15 @@ export const updateUserInfo = async (token, body) => {
 
 export const updatePet = async (record) => {
   return await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
+};
+
+export const putPetToUser = async (token, body) => {
+  const tokenParse = JSON.parse(token);
+  return await fetchDataFromCognito(
+    "POST",
+    API_BASE_ENDPOINT + "/user/pet",
+    tokenParse.accessToken,
+    tokenParse.idToken,
+    body
+  );
 };

@@ -1,26 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   FormLabel,
   IconButton,
   Typography,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import { compressImage, fileToBase64 } from "./../../utils/helper";
+import useErrorHandling from "./../hooks/useErrorHandling";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./Styles/imageUpload.css";
+
+const MAX_IMAGE_SIZE = 8 * 1024 * 1024; // 8 MB
+const VALID_IMAGE_TYPES = ["image/jpeg", "image/png"];
 
 const ImageUpload = ({ images, setImages, error }) => {
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newImages = files.slice(0, 3 - images.length).map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }));
+  const { handleError } = useErrorHandling();
+  const [loading, setLoading] = useState(false);
 
-    if (newImages.length + images.length > 3) {
-      alert("Solo puedes subir hasta 3 imágenes.");
-    } else {
-      setImages([...images, ...newImages]);
+  const handleImageUpload = async (event) => {
+    setLoading(true);
+    const files = Array.from(event.target.files);
+    const newImages = [];
+
+    try {
+      for (const file of files.slice(0, 3 - images.length)) {
+        // Verificar el tipo de archivo
+        if (!VALID_IMAGE_TYPES.includes(file.type)) {
+          handleError({
+            errorMessage: `El formato de la imagen ${file.name} no es válido. Solo se permiten JPEG y PNG.`,
+          });
+          continue;
+        }
+
+        // Verificar si la imagen es menor de 8 MB
+        if (file.size > MAX_IMAGE_SIZE) {
+          handleError({
+            errorMessage: `La imagen ${file.name} excede el límite de 8 MB.`,
+          });
+          continue;
+        }
+
+        const compressedFile = await compressImage(file);
+        const base64 = await fileToBase64(compressedFile);
+
+        console.log("img:::", { compressedFile, base64 });
+        newImages.push({
+          file: compressedFile,
+          preview: URL.createObjectURL(compressedFile),
+          base64,
+        });
+      }
+
+      if (newImages.length + images.length > 3) {
+        handleError({ errorMessage: "Solo puedes subir hasta 3 imágenes." });
+      } else {
+        setImages([...images, ...newImages]);
+      }
+    } catch (error) {
+      console.error("Error al comprimir las imágenes:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,64 +74,57 @@ const ImageUpload = ({ images, setImages, error }) => {
   };
 
   return (
-    <FormControl fullWidth error={Boolean(error)}>
-      <FormLabel>Cargar imágenes de tu mascota (máximo 3)</FormLabel>
-      <Box display="flex" alignItems="center" flexDirection="column" mt={1}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width="64px"
-          height="64px"
-          borderRadius="50%"
-          border="2px solid #086928"
-          mb={1}
-        >
-          <IconButton
-            color="primary"
-            aria-label="upload picture"
-            component="label"
-          >
-            <input
-              hidden
-              accept="image/*"
-              multiple
-              type="file"
-              onChange={handleImageUpload}
-            />
-            <PhotoCamera fontSize="large" />
-          </IconButton>
-        </Box>
-        {error && <Typography color="error">{error}</Typography>}
-      </Box>
-      <Box display="flex" gap={2} mt={2} flexWrap="wrap">
-        {images.map((image, index) => (
-          <Box
-            key={index}
-            position="relative"
-            width="100px"
-            height="100px"
-            borderRadius={2}
-            overflow="hidden"
-            border="1px solid #ddd"
-          >
-            <img
-              src={image.preview}
-              alt={`Vista previa ${index + 1}`}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-            <Button
-              size="small"
-              color="secondary"
-              onClick={() => handleRemoveImage(index)}
-              style={{ position: "absolute", top: 0, right: 0, padding: 0 }}
-            >
-              X
-            </Button>
+    <div>
+      <ToastContainer />
+      <FormControl fullWidth error={Boolean(error)}>
+        <FormLabel>
+          Cargar imágenes de tu mascota (máximo 3, hasta 8 MB cada una, solo
+          JPEG o PNG)
+        </FormLabel>
+        <Box className="upload-form-container">
+          <Box className="upload-icon-box">
+            {loading ? (
+              <CircularProgress color="primary" />
+            ) : (
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={handleImageUpload}
+                />
+                <PhotoCamera fontSize="large" />
+              </IconButton>
+            )}
           </Box>
-        ))}
-      </Box>
-    </FormControl>
+          {error && <Typography color="error">{error}</Typography>}
+        </Box>
+        <Box display="flex" gap={2} mt={2} flexWrap="wrap">
+          {images.map((image, index) => (
+            <Box key={index} className="upload-image-container">
+              <img
+                src={image.preview}
+                alt={`Vista previa ${index + 1}`}
+                className="upload-image"
+              />
+              <Button
+                size="small"
+                color="secondary"
+                onClick={() => handleRemoveImage(index)}
+                className="remove-button"
+              >
+                X
+              </Button>
+            </Box>
+          ))}
+        </Box>
+      </FormControl>
+    </div>
   );
 };
 

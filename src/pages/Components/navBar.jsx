@@ -158,7 +158,9 @@ const NavBar = () => {
           <MenuItem onClick={goToVetsPage}>Veterinarias</MenuItem>
           {auth && <MenuItem onClick={handleGoToUserInfo}>Perfil</MenuItem>}
           {auth && (
-            <MenuItem onClick={handleGoToUserPetsInfo}>Mis mascotas</MenuItem>
+            <MenuItem id="userPetsButton" onClick={handleGoToUserPetsInfo}>
+              Mis mascotas
+            </MenuItem>
           )}
           <Divider />
           {auth ? (
@@ -169,7 +171,7 @@ const NavBar = () => {
               Cerrar Sesión
             </MenuItem>
           ) : (
-            <MenuItem onClick={handleLogin}>
+            <MenuItem id="iniciarSesion" onClick={handleLogin}>
               <ListItemIcon>
                 <LoginIcon fontSize="small" />
               </ListItemIcon>
@@ -224,12 +226,17 @@ const NavBar = () => {
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           {auth ? (
             <Tooltip title="Abrir configuraciones">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton
+                id="userConfig"
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0 }}
+              >
                 <AccountCircleIcon sx={{ fontSize: 48, color: "#363636" }} />
               </IconButton>
             </Tooltip>
           ) : (
             <Button
+              id="iniciarSesion"
               color="inherit"
               onClick={handleLogin}
               startIcon={<LoginIcon />}
@@ -274,7 +281,7 @@ const NavBar = () => {
               Perfil
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleGoToUserPetsInfo}>
+            <MenuItem id="userPetsButton" onClick={handleGoToUserPetsInfo}>
               <ListItemIcon>
                 <PetsIcon fontSize="small" />
               </ListItemIcon>

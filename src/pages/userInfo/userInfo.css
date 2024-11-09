@@ -1,0 +1,24 @@
+/* userInfo.css */
+
+.user-info-container {
+  margin-top: 50px;
+}
+
+.loading-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.user-info-paper {
+  padding: 20px;
+}
+
+.social-media-heading {
+  margin-top: 20px;
+}
+
+.button-stack {
+  margin-top: 20px;
+}

@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import "./Styles/vetInfoDialog.css";
 
 const VetInfoDialog = ({ open, onClose, modalContent }) => {
   const daysOfWeek = [
@@ -26,21 +27,10 @@ const VetInfoDialog = ({ open, onClose, modalContent }) => {
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: {
-          borderRadius: 4,
-          padding: 2,
-          backgroundColor: "#f5f5f5",
-          boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)",
-        },
+        className: "dialog-paper",
       }}
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <DialogTitle className="dialog-title">
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           Información de la Veterinaria
         </Typography>
@@ -50,32 +40,29 @@ const VetInfoDialog = ({ open, onClose, modalContent }) => {
       </DialogTitle>
       <Divider />
       <DialogContent>
-        {/* Mostrar la imagen del logo circular */}
         {modalContent.image && modalContent.image.length > 0 && (
-          <Box
-            sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}
-          >
+          <Box className="image-container">
             <img
               src={modalContent.image[0]}
-              style={{
-                width: "100px",
-                height: "100px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
-              }}
+              alt="Veterinary Logo"
+              className="logo-image"
             />
           </Box>
         )}
 
-        <Typography variant="h6" sx={{ color: "#1976d2" }}>
+        <Typography variant="h6" className="vet-name">
           {modalContent.name}
         </Typography>
+
+        <div style={{ height: "10px" }} />
+
         <Typography variant="body1">
           <strong>Teléfono:</strong> {modalContent.phone}
         </Typography>
 
-        <Typography variant="body1" sx={{ marginTop: 2 }}>
+        <div style={{ height: "5px" }} />
+
+        <Typography variant="body1" className="section-title">
           <strong>Redes Sociales:</strong>
         </Typography>
         {modalContent.facebook && (
@@ -95,13 +82,18 @@ const VetInfoDialog = ({ open, onClose, modalContent }) => {
             <strong>Instagram:</strong> {modalContent.instagram}
           </Typography>
         )}
+
+        <div style={{ height: "5px" }} />
+
         {modalContent.tiktok && (
           <Typography variant="body2">
             <strong>TikTok:</strong> {modalContent.tiktok}
           </Typography>
         )}
 
-        <Typography variant="body1" sx={{ marginTop: 2 }}>
+        <div style={{ height: "5px" }} />
+
+        <Typography variant="body1" className="section-title">
           <strong>Horario de Atención:</strong>
         </Typography>
         {modalContent.businessHours ? (
@@ -114,10 +106,14 @@ const VetInfoDialog = ({ open, onClose, modalContent }) => {
             </Typography>
           ))
         ) : (
-          <Typography variant="body2">No hay horarios disponibles.</Typography>
+          <Typography className="address" variant="body2">
+            No hay horarios disponibles.
+          </Typography>
         )}
 
-        <Typography variant="body2" color="textSecondary" sx={{ marginTop: 2 }}>
+        <div style={{ height: "5px" }} />
+
+        <Typography variant="body2" className="address">
           <strong>Dirección:</strong> {modalContent.address}
         </Typography>
       </DialogContent>

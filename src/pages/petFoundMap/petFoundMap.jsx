@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import PetInfoMap from "./Components/petInfoMap";
-import { getPet, updatePet } from "../services/api";
-import { convertJsonToPet } from "../utils/helper";
-import useErrorHandling from "./hooks/useErrorHandling";
+import PetInfoMap from "../Components/petInfoMap";
+import { getPet, updatePet } from "../../services/api";
+import { convertJsonToPet } from "../../utils/helper";
+import useErrorHandling from "../hooks/useErrorHandling";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

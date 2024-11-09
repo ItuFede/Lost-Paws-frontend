@@ -10,6 +10,7 @@ import { Box, Typography, Card, CardContent } from "@mui/material";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { getDateByTimestamp } from "../../utils/helper";
+import "./Styles/petInfoMap.css";
 
 // Crear un icono personalizado que incluya un número
 const createMarkerIcon = (number) => {
@@ -31,28 +32,13 @@ const PetInfoMap = ({ petData }) => {
   ]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: 2,
-      }}
-    >
-      <Typography variant="h6" sx={{ textAlign: "center", marginBottom: 2 }}>
+    <Box className="container-pet-info-map">
+      <Typography variant="h6" className="title">
         Encontraste a <strong>{petData.name}</strong>, por favor ponte en
         contacto con su familia lo antes posible.
       </Typography>
 
-      <Box
-        sx={{
-          width: "80%",
-          height: "400px",
-          marginBottom: 2,
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <Box className="map-container-pet-info-map">
         <MapContainer
           center={positions[0]}
           zoom={13}
@@ -62,7 +48,6 @@ const PetInfoMap = ({ petData }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-
           {positions.map((position, index) => (
             <Marker
               key={index}
@@ -79,21 +64,21 @@ const PetInfoMap = ({ petData }) => {
         </MapContainer>
       </Box>
 
-      <Card sx={{ width: "100%", maxWidth: 600 }}>
+      <Card className="pet-card-pet-info-map">
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+          <Typography variant="h5" className="pet-card-title-pet-info-map">
             Información de la mascota
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" className="pet-info-pet-info-map">
             <strong>Nombre:</strong> {petData.name}
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" className="pet-info-pet-info-map">
             <strong>Tipo:</strong> {petData.getAnimalType()}
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" className="pet-info-pet-info-map">
             <strong>Teléfono:</strong> {petData.phoneNumberOwner}
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" className="pet-info-pet-info-map">
             <strong>Descripción:</strong> {petData.description}
           </Typography>
         </CardContent>

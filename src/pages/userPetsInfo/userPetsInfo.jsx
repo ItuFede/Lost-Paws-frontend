@@ -12,10 +12,11 @@ import {
 } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { convertJsonToPet } from "../utils/helper";
-import { getUserPetsInfo } from "../services/api";
+import { convertJsonToPet } from "../../utils/helper";
+import { getUserPetsInfo } from "../../services/api";
 import { QRCodeCanvas } from "qrcode.react";
 import { useNavigate } from "react-router-dom";
+import "./userPetInfo.css";
 
 const UserPetInfo = () => {
   const [userPets, setUserPets] = useState([]);
@@ -25,6 +26,23 @@ const UserPetInfo = () => {
   const [qrStringValue, setQrStringValue] = useState("");
 
   const navigate = useNavigate();
+
+  const calculateAge = (birthdate) => {
+    const birthDate = new Date(birthdate);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
 
   const handleNext = (petIndex) => {
     setCurrentIndexes((prevIndexes) => ({
@@ -74,13 +92,8 @@ const UserPetInfo = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="sm" style={{ marginTop: "50px" }}>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="100vh"
-        >
+      <Container maxWidth="sm" className="container-custom">
+        <Box className="box-container-loading">
           <CircularProgress />
         </Box>
       </Container>
@@ -89,20 +102,15 @@ const UserPetInfo = () => {
 
   if (userPets.length === 0) {
     return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ marginTop: 4 }}
-      >
-        <Typography variant="h6" color="text.secondary">
+      <Box className="box-container">
+        <Typography className="no-pets-text" variant="h6">
           No cuentas con mascotas registradas por el momento.
         </Typography>
         <Button
+          id="addPetButton"
           variant="contained"
           onClick={() => navigate("/pet/register")}
-          sx={{ marginTop: 2 }}
+          className="add-pet-button"
         >
           Agregar Mascota
         </Button>
@@ -119,6 +127,7 @@ const UserPetInfo = () => {
       sx={{ marginTop: 4 }}
     >
       <Button
+        id="addPetButton"
         variant="contained"
         onClick={() => navigate("/pet/register")}
         sx={{ marginBottom: 2 }}
@@ -130,11 +139,13 @@ const UserPetInfo = () => {
         {userPets.map((pet, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card
+              id={"petCard_" + index}
               variant="outlined"
               sx={{ margin: 2, borderRadius: 2, boxShadow: 3 }}
             >
               <CardContent>
                 <Typography
+                  id={"petCard_name_" + index}
                   variant="h5"
                   component="div"
                   sx={{ fontWeight: "bold", textAlign: "center" }}
@@ -142,6 +153,7 @@ const UserPetInfo = () => {
                   {pet.name}
                 </Typography>
                 <Typography
+                  id={"petCard_animal_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -149,6 +161,7 @@ const UserPetInfo = () => {
                   <strong>Animal:</strong> {pet.animal}
                 </Typography>
                 <Typography
+                  id={"petCard_breed_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -156,13 +169,15 @@ const UserPetInfo = () => {
                   <strong>Raza:</strong> {pet.breed}
                 </Typography>
                 <Typography
+                  id={"petCard_age_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
                 >
-                  <strong>Edad:</strong> {pet.age} años
+                  <strong>Edad:</strong> {calculateAge(pet.age)} años
                 </Typography>
                 <Typography
+                  id={"petCard_sex_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -170,6 +185,7 @@ const UserPetInfo = () => {
                   <strong>Sexo:</strong> {pet.sex}
                 </Typography>
                 <Typography
+                  id={"petCard_size_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -177,6 +193,7 @@ const UserPetInfo = () => {
                   <strong>Tamaño:</strong> {pet.size}
                 </Typography>
                 <Typography
+                  id={"petCard_characteristic_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -184,6 +201,7 @@ const UserPetInfo = () => {
                   <strong>Características:</strong> {pet.characteristics}
                 </Typography>
                 <Typography
+                  id={"petCard_colors_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -192,54 +210,35 @@ const UserPetInfo = () => {
                   {pet.generalColor.join(", ")}
                 </Typography>
 
-                {pet.images && pet.images.length > 0 && (
-                  <Box sx={{ marginTop: 3, position: "relative" }}>
-                    <IconButton
-                      onClick={() => handlePrev(index)}
-                      sx={{
-                        position: "absolute",
-                        top: "50%",
-                        left: 0,
-                        transform: "translateY(-50%)",
-                        zIndex: 1,
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        color: "white",
-                      }}
-                    >
-                      <ArrowBackIosNewIcon />
-                    </IconButton>
+                <Box sx={{ marginTop: 3, position: "relative" }}>
+                  <IconButton
+                    onClick={() => handlePrev(index)}
+                    className="overlay-button"
+                    style={{ left: 0 }}
+                  >
+                    <ArrowBackIosNewIcon />
+                  </IconButton>
 
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                      <img
-                        src={pet.images[currentIndexes[index]]}
-                        alt={`Imagen ${currentIndexes[index] + 1}`}
-                        style={{
-                          width: "100%",
-                          maxWidth: "250px",
-                          maxHeight: "250px",
-                          borderRadius: "10px",
-                          objectFit: "cover",
-                          boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
-                        }}
-                      />
-                    </Box>
-
-                    <IconButton
-                      onClick={() => handleNext(index)}
-                      sx={{
-                        position: "absolute",
-                        top: "50%",
-                        right: 0,
-                        transform: "translateY(-50%)",
-                        zIndex: 1,
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        color: "white",
-                      }}
-                    >
-                      <ArrowForwardIosIcon />
-                    </IconButton>
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <img
+                      src={
+                        pet.images && pet.images.length > 0
+                          ? pet.images[currentIndexes[index]]
+                          : "src/assets/images/no-photo.png"
+                      }
+                      alt={`Imagen ${currentIndexes[index] + 1}`}
+                      className="image"
+                    />
                   </Box>
-                )}
+
+                  <IconButton
+                    onClick={() => handleNext(index)}
+                    className="overlay-button"
+                    style={{ right: 0 }}
+                  >
+                    <ArrowForwardIosIcon />
+                  </IconButton>
+                </Box>
 
                 <Button
                   variant="contained"
@@ -269,22 +268,7 @@ const UserPetInfo = () => {
 };
 
 const QRCodeComponent = ({ qrStringValue, onClose }) => (
-  <Box
-    display="flex"
-    flexDirection="column"
-    alignItems="center"
-    justifyContent="center"
-    sx={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100vw",
-      height: "100vh",
-      backgroundColor: "rgba(0, 0, 0, 0.8)",
-      zIndex: 1000,
-    }}
-    onClick={onClose}
-  >
+  <Box className="qr-code-container" onClick={onClose}>
     <QRCodeCanvas value={qrStringValue} size={200} />
     <Typography variant="h6" color="white" sx={{ marginTop: 2 }}>
       Escanea el código QR

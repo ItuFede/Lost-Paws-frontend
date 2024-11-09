@@ -1,0 +1,26 @@
+.slider-box {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.78);
+  border-radius: 4px;
+  z-index: 1000;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.slider-box-collapsed {
+  width: 40px;
+  padding: 0;
+}
+
+.slider-box-expanded {
+  width: 275px;
+  padding: 32px;
+}
+
+.info-button {
+  position: absolute !important;
+  top: 5px;
+  right: 5px;
+}

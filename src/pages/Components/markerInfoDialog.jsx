@@ -11,6 +11,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import "./Styles/markerInfoDialog.css";
 
 const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -34,22 +35,11 @@ const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: {
-          borderRadius: 4,
-          padding: 2,
-          backgroundColor: "#f5f5f5",
-          boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)",
-        },
+        className: "dialog-paper",
       }}
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+      <DialogTitle className="dialog-title">
+        <Typography variant="h6" className="dialog-title-typography">
           Información de la mascota
         </Typography>
         <IconButton onClick={onClose} aria-label="close">
@@ -58,7 +48,7 @@ const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
       </DialogTitle>
       <Divider />
       <DialogContent>
-        <Typography variant="h6" sx={{ color: "#1976d2" }}>
+        <Typography variant="h6" className="typography-highlight">
           {modalContent.name + " " + "(" + modalContent.animal + ")"}
         </Typography>
         <Typography variant="body1">
@@ -74,18 +64,10 @@ const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
         </Typography>
 
         {modalContent.images && modalContent.images.length > 0 && (
-          <Box sx={{ marginTop: 3, position: "relative" }}>
+          <Box className="modal-image-container">
             <IconButton
               onClick={handlePrev}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: 0,
-                transform: "translateY(-50%)",
-                zIndex: 1,
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                color: "white",
-              }}
+              className="nav-button nav-button-left"
             >
               <ArrowBackIosNewIcon />
             </IconButton>
@@ -94,28 +76,13 @@ const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
               <img
                 src={modalContent.images[currentIndex]}
                 alt={`Imagen ${currentIndex + 1}`}
-                style={{
-                  width: "100%",
-                  maxWidth: "250px",
-                  maxHeight: "250px",
-                  borderRadius: "10px",
-                  objectFit: "cover",
-                  boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
-                }}
+                className="modal-image"
               />
             </Box>
 
             <IconButton
               onClick={handleNext}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                right: 0,
-                transform: "translateY(-50%)",
-                zIndex: 1,
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                color: "white",
-              }}
+              className="nav-button nav-button-right"
             >
               <ArrowForwardIosIcon />
             </IconButton>

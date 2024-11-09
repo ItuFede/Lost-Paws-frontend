@@ -1,15 +1,16 @@
-import { getDistance } from "../utils/helper";
+import { getDistance } from "../../utils/helper";
 import React, { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Circle, Marker, useMap } from "react-leaflet";
 import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 import "leaflet/dist/leaflet.css";
-import MarkerList from "./Components/markerList";
-import RadiusSlider from "./Components/radiusSlider";
-import MarkerInfoDialog from "./Components/markerInfoDialog";
-import { getPets, getPetImages } from "../services/api";
-import useErrorHandling from "./hooks/useErrorHandling";
+import MarkerList from "../Components/markerList";
+import RadiusSlider from "../Components/radiusSlider";
+import MarkerInfoDialog from "../Components/markerInfoDialog";
+import { getPets, getPetImages } from "../../services/api";
+import useErrorHandling from "../hooks/useErrorHandling";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./petsMap.css";
 
 function LocationMarker({ position, radius }) {
   const map = useMap();
@@ -76,9 +77,9 @@ const PetsMap = () => {
       (location) => {
         fetchData();
         const { latitude, longitude } = location.coords;
-        //setPosition([latitude, longitude]);
+        setPosition([latitude, longitude]);
         //TODO: Delete Mock
-        setPosition([-34.710811, -58.292755]);
+        //setPosition([-34.710811, -58.292755]); //MOCK
         setLoading(false);
       },
       () => {
@@ -138,31 +139,21 @@ const PetsMap = () => {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: isMobile ? "column" : "row",
-        height: "86vh",
-      }}
+      className="mapBorder"
+      style={{ "--flex-direction": isMobile ? "column" : "row" }}
     >
       <Box sx={{ flex: 1 }}>
         {loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
+          <Box className="loader">
             <CircularProgress />
           </Box>
         ) : (
-          <Box sx={{ position: "relative", height: "86vh" }}>
+          <Box className="map-container">
             <MapContainer
               ref={mapRef}
               center={position || [-34.603715, -58.381631]}
               zoom={13}
-              style={{ height: "100%", width: "100%" }}
+              className="map-wrapper"
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <LocationMarker position={position} radius={radius} />
@@ -177,12 +168,8 @@ const PetsMap = () => {
       </Box>
 
       <Box
-        sx={{
-          width: "300px",
-          borderLeft: "1px solid #ddd",
-          display: isMobile ? "none" : "flex",
-          flexDirection: "column",
-        }}
+        className="side-panel"
+        style={{ "--side-panel-display": isMobile ? "none" : "flex" }}
       >
         <MarkerList markers={filteredMarkers} onCardClick={handleCardClick} />
       </Box>

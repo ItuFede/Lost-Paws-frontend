@@ -1,0 +1,82 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.home-title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.home-logo {
+  width: 300px;
+  height: 300px;
+}
+
+.home-description {
+  color: #616161;
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 32px;
+}
+
+.home-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 24px;
+  max-width: 1200px;
+}
+
+.home-card {
+  padding: 24px;
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .home-card {
+    width: 30%;
+  }
+}
+
+.home-card-lost {
+  padding: 24px;
+  background-color: #66bb6a !important;
+  text-align: center;
+  width: 100%;
+}
+
+.home-card-clinic {
+  padding: 24px;
+  background-color: #4db6ac !important;
+  text-align: center;
+  width: 100%;
+}
+
+.home-card-adoption {
+  padding: 24px;
+  background-color: #ffb74d !important;
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .home-card-lost {
+    width: 30%;
+  }
+  .home-card-clinic {
+    width: 30%;
+  }
+  .home-card-adoption {
+    width: 30%;
+  }
+}
+
+.home-card-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}

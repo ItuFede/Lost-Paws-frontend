@@ -1,0 +1,23 @@
+/* vetMaps.css */
+
+.box-main {
+  display: flex;
+  height: 86vh;
+}
+
+.box-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.box-map-container {
+  position: relative;
+  height: 86vh;
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}

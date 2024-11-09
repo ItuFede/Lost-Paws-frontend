@@ -1,16 +1,10 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import "./Styles/footer.css";
 
 const Footer = () => {
   return (
-    <Box
-      sx={{
-        backgroundColor: "#A0D468",
-        py: 2,
-        textAlign: "center",
-        width: "100%",
-      }}
-    >
+    <Box className="footer">
       <Typography variant="body1" sx={{ fontSize: { xs: "14px", sm: "16px" } }}>
         © {new Date().getFullYear()} Lost & Paws. Todos los derechos reservados.
       </Typography>

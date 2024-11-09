@@ -1,0 +1,39 @@
+.upload-form-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.upload-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #086928;
+  margin-bottom: 8px;
+}
+
+.upload-image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.upload-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0;
+}

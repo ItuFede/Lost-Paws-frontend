@@ -1,17 +1,18 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box } from "@mui/material"; // Solo importa Box
+import { Box } from "@mui/material";
 import theme from "./styles/theme";
-import Home from "./pages/home";
-import PetsMap from "./pages/petsMap";
-import VetsMap from "./pages/vetsMap";
-import UserInfo from "./pages/userInfo";
-import UserPetsInfo from "./pages/userPetsInfo";
-import PetFoundMap from "./pages/petFoundMap";
-import RegisterPetForm from "./pages/registerPetForm";
-import NotFound from "./pages/notFound";
+import Home from "./pages/home/home";
+import PetsMap from "./pages/petsMap/petsMap";
+import VetsMap from "./pages/vetsMap/vetsMap";
+import UserInfo from "./pages/userInfo/userInfo";
+import UserPetsInfo from "./pages/userPetsInfo/userPetsInfo";
+import PetFoundMap from "./pages/petFoundMap/petFoundMap";
+import RegisterPetForm from "./pages/registerPetForm/registerPetForm";
+import NotFound from "./pages/notFound/notFound";
 import NavBar from "./pages/Components/navBar";
 import Footer from "./pages/Components/footer";
+import ProtectedRoute from "./pages/Components/protectedRoute";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -34,13 +35,20 @@ function App() {
             {" "}
             <Routes>
               <Route path="/" element={<Home />} />
-              {/* TODO: Esto tiene que estar protegido (USER)*/}
-              <Route path="/user" element={<UserInfo />} />
-              <Route path="/user/pet" element={<UserPetsInfo />} />
-              <Route path="/pet/register" element={<RegisterPetForm />} />
+              <Route
+                path="/user"
+                element={<ProtectedRoute element={<UserInfo />} />}
+              />
+              <Route
+                path="/user/pet"
+                element={<ProtectedRoute element={<UserPetsInfo />} />}
+              />
+              <Route
+                path="/pet/register"
+                element={<ProtectedRoute element={<RegisterPetForm />} />}
+              />
               <Route path="/pet/lost" element={<PetsMap />} />
               <Route path="/vet" element={<VetsMap />} />
-              {/* <ProtectedRoute path="/vet" component={VetsMap} /> */}
               <Route path="pet/found/:petId" element={<PetFoundMap />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

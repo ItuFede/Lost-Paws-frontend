@@ -1,0 +1,51 @@
+.dialog-paper {
+  border-radius: 16px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-title-typography {
+  font-weight: bold;
+}
+
+.typography-highlight {
+  color: #1976d2;
+}
+
+.modal-image-container {
+  margin-top: 24px;
+  position: relative;
+}
+
+.nav-button {
+  position: absolute !important;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+}
+
+.nav-button-left {
+  left: 0;
+}
+
+.nav-button-right {
+  right: 0;
+}
+
+.modal-image {
+  width: 100%;
+  max-width: 250px;
+  max-height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}

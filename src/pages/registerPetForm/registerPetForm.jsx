@@ -16,7 +16,9 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import ImageUpload from "./Components/imageUpload";
+import ImageUpload from "../Components/imageUpload";
+import { putPetToUser } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const petCharacteristics = [
   "Tímido",
@@ -52,6 +54,7 @@ const RegisterPetForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -98,14 +101,18 @@ const RegisterPetForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
+    console.log("validationErrors:::", validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       console.log("Datos del formulario de mascota:", formData);
-      //TODO: Llamar al service API.
+      const auth = localStorage.getItem("authData");
+      const register = await putPetToUser(auth, formData);
+      console.log("register:::", register);
+      navigate("/user/pet");
     }
   };
 
@@ -125,7 +132,7 @@ const RegisterPetForm = () => {
             fullWidth
             error={Boolean(errors.name)}
             helperText={errors.name}
-            data-testid="name"
+            id="name"
           />
         </Grid>
 
@@ -136,13 +143,17 @@ const RegisterPetForm = () => {
               name="animal"
               value={formData.animal}
               onChange={handleInputChange}
-              data-testid="animal-select"
+              id="animal-select"
             >
               <MenuItem value="">
                 <em>Selecciona un animal</em>
               </MenuItem>
-              <MenuItem value="Perro">Perro</MenuItem>
-              <MenuItem value="Gato">Gato</MenuItem>
+              <MenuItem id="dogItem" value="Perro">
+                Perro
+              </MenuItem>
+              <MenuItem id="catItem" value="Gato">
+                Gato
+              </MenuItem>
             </Select>
             {errors.animal && (
               <Typography color="error">{errors.animal}</Typography>
@@ -158,11 +169,11 @@ const RegisterPetForm = () => {
               options={petCharacteristics}
               value={formData.characteristics}
               onChange={handleCheckboxChange}
+              id="characteristics"
               renderInput={(params) => (
                 <TextField
                   {...params}
                   placeholder="Selecciona características"
-                  data-testid="characteristics"
                 />
               )}
             />
@@ -176,7 +187,7 @@ const RegisterPetForm = () => {
             value={formData.breed}
             onChange={handleInputChange}
             fullWidth
-            data-testid="breed"
+            id="breed"
           />
         </Grid>
 
@@ -186,13 +197,13 @@ const RegisterPetForm = () => {
               label="Fecha de nacimiento"
               value={formData.birthDate}
               onChange={handleDateChange}
+              id="birth-date"
               renderInput={(params) => (
                 <TextField
                   {...params}
                   fullWidth
                   error={Boolean(errors.birthDate)}
                   helperText={errors.birthDate}
-                  data-testid="birth-date"
                 />
               )}
             />
@@ -211,14 +222,16 @@ const RegisterPetForm = () => {
               name="sex"
               value={formData.sex}
               onChange={handleInputChange}
-              data-testid="sex"
+              id="sex"
             >
               <FormControlLabel
+                id="maleRadio"
                 value="Macho"
                 control={<Radio />}
                 label="Macho"
               />
               <FormControlLabel
+                id="femaleRadio"
                 value="Hembra"
                 control={<Radio />}
                 label="Hembra"
@@ -235,14 +248,20 @@ const RegisterPetForm = () => {
               name="size"
               value={formData.size}
               onChange={handleInputChange}
-              data-testid="size"
+              id="size-select"
             >
               <MenuItem value="">
                 <em>Selecciona un tamaño</em>
               </MenuItem>
-              <MenuItem value="CHICO">CHICO</MenuItem>
-              <MenuItem value="MEDIANO">MEDIANO</MenuItem>
-              <MenuItem value="GRANDE">GRANDE</MenuItem>
+              <MenuItem id="smallItem" value="CHICO">
+                CHICO
+              </MenuItem>
+              <MenuItem id="mediumItem" value="MEDIANO">
+                MEDIANO
+              </MenuItem>
+              <MenuItem id="largeItem" value="GRANDE">
+                GRANDE
+              </MenuItem>
             </Select>
             {errors.size && (
               <Typography color="error">{errors.size}</Typography>
@@ -258,12 +277,9 @@ const RegisterPetForm = () => {
               options={generalColors}
               value={formData.colors}
               onChange={handleColorsChange}
+              id="colors-auto-complete"
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Selecciona colores"
-                  data-testid="colors"
-                />
+                <TextField {...params} placeholder="Selecciona colores" />
               )}
             />
             {errors.colors && (
@@ -281,7 +297,7 @@ const RegisterPetForm = () => {
             fullWidth
             multiline
             rows={4}
-            data-testid="description"
+            id="description"
           />
         </Grid>
 
@@ -292,7 +308,7 @@ const RegisterPetForm = () => {
             value={formData.medicalTreatment}
             onChange={handleInputChange}
             fullWidth
-            data-testid="medical-treatment"
+            id="medical-treatment"
           />
         </Grid>
 
@@ -305,7 +321,13 @@ const RegisterPetForm = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Button variant="contained" type="submit" color="primary" fullWidth>
+          <Button
+            id="registerPetButtom"
+            variant="contained"
+            type="submit"
+            color="primary"
+            fullWidth
+          >
             Registrar Mascota
           </Button>
         </Grid>
