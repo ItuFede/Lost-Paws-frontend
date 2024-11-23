@@ -38,6 +38,18 @@ export const getDateByTimestamp = (timestamp) => {
   return fecha.toLocaleString("es-AR", opciones);
 };
 
+export const getDateYMDByTimestamp = (timestamp) => {
+  const fecha = new Date(timestamp);
+  const opciones = {
+    timeZone: "America/Argentina/Buenos_Aires",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  return fecha.toLocaleString("es-AR", opciones);
+};
+
 export const compressImage = async (file) => {
   const options = {
     maxWidthOrHeight: 720, // Define el ancho máximo

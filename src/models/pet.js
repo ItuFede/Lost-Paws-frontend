@@ -38,7 +38,6 @@ class Pet {
   }
 
   getLatitude(pos) {
-    console.log("getLatitude:::", this.missingReport);
     return this.missingReport.locationsView[pos].latitude;
   }
 
@@ -66,8 +65,12 @@ class Pet {
     return this.missingReport.state;
   }
 
+  getMissingInfo() {
+    return this.missingReport.info;
+  }
+
   getAnimalType() {
-    return this.animal == "CAT" ? "GATO" : "PERRO";
+    return this.animal;
   }
 }
 

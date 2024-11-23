@@ -63,8 +63,15 @@ const RegisterPetForm = () => {
   };
 
   const handleDateChange = (date) => {
-    setFormData((prevData) => ({ ...prevData, birthDate: date }));
-    setErrors((prevErrors) => ({ ...prevErrors, birthDate: "" }));
+    if (date > new Date()) {
+      setErrors((prev) => ({
+        ...prev,
+        birthDate: "No puedes seleccionar una fecha futura",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, birthDate: "" }));
+      setFormData((prev) => ({ ...prev, birthDate: date }));
+    }
   };
 
   const handleCheckboxChange = (event, newValue) => {
@@ -117,221 +124,239 @@ const RegisterPetForm = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} p={3} maxWidth="md" mx="auto">
-      <Typography variant="h4" gutterBottom textAlign="center">
-        Registrar Nueva Mascota
-      </Typography>
+    <Box className="background-pet">
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        p={2}
+        m={2}
+        maxWidth="md"
+        mx="auto"
+        sx={{
+          backgroundColor: "white",
+        }}
+      >
+        <Typography variant="h4" gutterBottom textAlign="center">
+          Registrar Nueva Mascota
+        </Typography>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            label="Nombre"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            fullWidth
-            error={Boolean(errors.name)}
-            helperText={errors.name}
-            id="name"
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <FormControl fullWidth error={Boolean(errors.animal)}>
-            <FormLabel>Animal</FormLabel>
-            <Select
-              name="animal"
-              value={formData.animal}
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Nombre"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
-              id="animal-select"
-            >
-              <MenuItem value="">
-                <em>Selecciona un animal</em>
-              </MenuItem>
-              <MenuItem id="dogItem" value="Perro">
-                Perro
-              </MenuItem>
-              <MenuItem id="catItem" value="Gato">
-                Gato
-              </MenuItem>
-            </Select>
-            {errors.animal && (
-              <Typography color="error">{errors.animal}</Typography>
-            )}
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={6}>
-          <FormControl fullWidth>
-            <FormLabel>Características</FormLabel>
-            <Autocomplete
-              multiple
-              options={petCharacteristics}
-              value={formData.characteristics}
-              onChange={handleCheckboxChange}
-              id="characteristics"
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Selecciona características"
-                />
-              )}
+              fullWidth
+              error={Boolean(errors.name)}
+              helperText={errors.name}
+              id="name"
             />
-          </FormControl>
-        </Grid>
+          </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            label="Raza"
-            name="breed"
-            value={formData.breed}
-            onChange={handleInputChange}
-            fullWidth
-            id="breed"
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Fecha de nacimiento"
-              value={formData.birthDate}
-              onChange={handleDateChange}
-              id="birth-date"
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  fullWidth
-                  error={Boolean(errors.birthDate)}
-                  helperText={errors.birthDate}
-                />
+          <Grid item xs={6}>
+            <FormControl fullWidth error={Boolean(errors.animal)}>
+              <FormLabel>Animal</FormLabel>
+              <Select
+                name="animal"
+                value={formData.animal}
+                onChange={handleInputChange}
+                id="animal-select"
+              >
+                <MenuItem value="">
+                  <em>Selecciona un animal</em>
+                </MenuItem>
+                <MenuItem id="dogItem" value="Perro">
+                  Perro
+                </MenuItem>
+                <MenuItem id="catItem" value="Gato">
+                  Gato
+                </MenuItem>
+              </Select>
+              {errors.animal && (
+                <Typography color="error">{errors.animal}</Typography>
               )}
-            />
-          </LocalizationProvider>
-        </Grid>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={6}>
-          <FormControl
-            component="fieldset"
-            fullWidth
-            error={Boolean(errors.sex)}
-          >
-            <FormLabel>Sexo</FormLabel>
-            <RadioGroup
-              row
-              name="sex"
-              value={formData.sex}
-              onChange={handleInputChange}
-              id="sex"
-            >
-              <FormControlLabel
-                id="maleRadio"
-                value="Macho"
-                control={<Radio />}
-                label="Macho"
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <FormLabel>Características</FormLabel>
+              <Autocomplete
+                multiple
+                options={petCharacteristics}
+                value={formData.characteristics}
+                onChange={handleCheckboxChange}
+                id="characteristics"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Selecciona características"
+                  />
+                )}
               />
-              <FormControlLabel
-                id="femaleRadio"
-                value="Hembra"
-                control={<Radio />}
-                label="Hembra"
-              />
-            </RadioGroup>
-            {errors.sex && <Typography color="error">{errors.sex}</Typography>}
-          </FormControl>
-        </Grid>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={6}>
-          <FormControl fullWidth error={Boolean(errors.size)}>
-            <FormLabel>Tamaño</FormLabel>
-            <Select
-              name="size"
-              value={formData.size}
+          <Grid item xs={12}>
+            <TextField
+              label="Raza"
+              name="breed"
+              value={formData.breed}
               onChange={handleInputChange}
-              id="size-select"
-            >
-              <MenuItem value="">
-                <em>Selecciona un tamaño</em>
-              </MenuItem>
-              <MenuItem id="smallItem" value="CHICO">
-                CHICO
-              </MenuItem>
-              <MenuItem id="mediumItem" value="MEDIANO">
-                MEDIANO
-              </MenuItem>
-              <MenuItem id="largeItem" value="GRANDE">
-                GRANDE
-              </MenuItem>
-            </Select>
-            {errors.size && (
-              <Typography color="error">{errors.size}</Typography>
-            )}
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={6}>
-          <FormControl fullWidth error={Boolean(errors.colors)}>
-            <FormLabel>Colores generales</FormLabel>
-            <Autocomplete
-              multiple
-              options={generalColors}
-              value={formData.colors}
-              onChange={handleColorsChange}
-              id="colors-auto-complete"
-              renderInput={(params) => (
-                <TextField {...params} placeholder="Selecciona colores" />
-              )}
+              fullWidth
+              id="breed"
             />
-            {errors.colors && (
-              <Typography color="error">{errors.colors}</Typography>
-            )}
-          </FormControl>
-        </Grid>
+          </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            label="Descripción"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            fullWidth
-            multiline
-            rows={4}
-            id="description"
-          />
-        </Grid>
+          <Grid item xs={6}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Fecha de nacimiento"
+                value={formData.birthDate}
+                onChange={handleDateChange}
+                id="birth-date"
+                maxDate={new Date()}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    error={Boolean(errors.birthDate)}
+                    helperText={errors.birthDate}
+                  />
+                )}
+              />
+              {errors.birthDate && (
+                <Typography color="error">{errors.birthDate}</Typography>
+              )}
+            </LocalizationProvider>
+          </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            label="Tratamientos médicos"
-            name="medicalTreatment"
-            value={formData.medicalTreatment}
-            onChange={handleInputChange}
-            fullWidth
-            id="medical-treatment"
-          />
-        </Grid>
+          <Grid item xs={6}>
+            <FormControl
+              component="fieldset"
+              fullWidth
+              error={Boolean(errors.sex)}
+            >
+              <FormLabel>Sexo</FormLabel>
+              <RadioGroup
+                row
+                name="sex"
+                value={formData.sex}
+                onChange={handleInputChange}
+                id="sex"
+              >
+                <FormControlLabel
+                  id="maleRadio"
+                  value="Macho"
+                  control={<Radio />}
+                  label="Macho"
+                />
+                <FormControlLabel
+                  id="femaleRadio"
+                  value="Hembra"
+                  control={<Radio />}
+                  label="Hembra"
+                />
+              </RadioGroup>
+              {errors.sex && (
+                <Typography color="error">{errors.sex}</Typography>
+              )}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12}>
-          <ImageUpload
-            images={formData.images}
-            setImages={handleImageUpload}
-            error={errors.images}
-          />
-        </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth error={Boolean(errors.size)}>
+              <FormLabel>Tamaño</FormLabel>
+              <Select
+                name="size"
+                value={formData.size}
+                onChange={handleInputChange}
+                id="size-select"
+              >
+                <MenuItem value="">
+                  <em>Selecciona un tamaño</em>
+                </MenuItem>
+                <MenuItem id="smallItem" value="CHICO">
+                  CHICO
+                </MenuItem>
+                <MenuItem id="mediumItem" value="MEDIANO">
+                  MEDIANO
+                </MenuItem>
+                <MenuItem id="largeItem" value="GRANDE">
+                  GRANDE
+                </MenuItem>
+              </Select>
+              {errors.size && (
+                <Typography color="error">{errors.size}</Typography>
+              )}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12}>
-          <Button
-            id="registerPetButtom"
-            variant="contained"
-            type="submit"
-            color="primary"
-            fullWidth
-          >
-            Registrar Mascota
-          </Button>
+          <Grid item xs={6}>
+            <FormControl fullWidth error={Boolean(errors.colors)}>
+              <FormLabel>Colores generales</FormLabel>
+              <Autocomplete
+                multiple
+                options={generalColors}
+                value={formData.colors}
+                onChange={handleColorsChange}
+                id="colors-auto-complete"
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Selecciona colores" />
+                )}
+              />
+              {errors.colors && (
+                <Typography color="error">{errors.colors}</Typography>
+              )}
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Descripción"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              fullWidth
+              multiline
+              rows={4}
+              id="description"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Tratamientos médicos"
+              name="medicalTreatment"
+              value={formData.medicalTreatment}
+              onChange={handleInputChange}
+              fullWidth
+              id="medical-treatment"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <ImageUpload
+              images={formData.images}
+              setImages={handleImageUpload}
+              error={errors.images}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button
+              id="registerPetButtom"
+              variant="contained"
+              type="submit"
+              color="primary"
+              fullWidth
+            >
+              Registrar Mascota
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Box, CircularProgress, Container } from "@mui/material";
 import { useParams } from "react-router-dom";
 import PetInfoMap from "../Components/petInfoMap";
-import { getPet, updatePet } from "../../services/api";
+import { getPet, updatePet, getPetImages } from "../../services/api";
 import { convertJsonToPet } from "../../utils/helper";
 import useErrorHandling from "../hooks/useErrorHandling";
 import { ToastContainer } from "react-toastify";
@@ -24,11 +25,14 @@ const PetFoundMap = () => {
       const validUUID = validateUUID(petId);
 
       if (validUUID) {
-        setPetData(await getPet(petId));
+        const petData = await getPet(petId);
+        petData.images = await getPetImages(petId);
+        setPetData(petData);
       } else {
         handleError({ errorMessage: "UUID no valido" });
       }
 
+      /*
       if (petId) {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
@@ -42,11 +46,13 @@ const PetFoundMap = () => {
           }
         );
       }
+      */
     };
 
     fetchPetData();
   }, [petId]);
 
+  /*
   useEffect(() => {
     const fetchData = async () => {
       if (position && petData) {
@@ -58,7 +64,7 @@ const PetFoundMap = () => {
 
         try {
           console.log("record:::", record);
-          await updatePet(record);
+          //await updatePet(record);
         } catch (error) {
           handleError("Error al actualizar la mascota");
           return;
@@ -85,20 +91,24 @@ const PetFoundMap = () => {
 
     fetchData();
   }, [position]);
+  */
 
-  if (!petData)
+  if (!petData) {
     return (
-      <div>
-        Cargando información...
-        <ToastContainer />
-      </div>
+      <Container maxWidth="sm" className="container-custom">
+        <Box className="box-container-loading">
+          <CircularProgress />
+          <ToastContainer />
+        </Box>
+      </Container>
     );
+  }
 
   return (
-    <div>
+    <Container className="background-pet">
       <ToastContainer />
       <PetInfoMap petData={petData} />
-    </div>
+    </Container>
   );
 };
 

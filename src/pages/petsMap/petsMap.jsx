@@ -61,7 +61,8 @@ const PetsMap = () => {
 
   const fetchData = async () => {
     try {
-      setPetsData(await getPets());
+      const pets = await getPets();
+      setPetsData(pets);
     } catch (e) {
       handleError({
         errorMessage: `Al buscar las mascotas perdidas: ${
@@ -108,7 +109,7 @@ const PetsMap = () => {
         name: pet.name,
         zone: pet.town,
         animal: pet.getAnimalType(),
-        description: pet.description,
+        description: pet.getMissingInfo(),
         phone: pet.phoneNumberOwner,
         images: [],
       }));
@@ -168,7 +169,7 @@ const PetsMap = () => {
       </Box>
 
       <Box
-        className="side-panel"
+        className="side-panel background-pet"
         style={{ "--side-panel-display": isMobile ? "none" : "flex" }}
       >
         <MarkerList markers={filteredMarkers} onCardClick={handleCardClick} />

@@ -26,7 +26,7 @@ const COGNITO_CLIENT_ID = import.meta.env.VITE_COGNITO_CLIENT_ID;
 const COGNITO_REDIRECT_URL = import.meta.env.VITE_COGNITO_REDIRECT_URL;
 const COGNITO_DOMAIN = import.meta.env.VITE_COGNITO_DOMAIN;
 
-const NavBar = () => {
+const NavBar = ({ setLoading }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [auth, setAuth] = useState(null);
@@ -38,13 +38,16 @@ const NavBar = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const authorizationCode = urlParams.get("code");
       const savedAuth = localStorage.getItem("authData");
-
       if (authorizationCode && !savedAuth) {
+        setLoading(true);
         const response = await authUser(authorizationCode);
         if (response?.accessToken) {
           setAuth(response);
           localStorage.setItem("authData", JSON.stringify(response));
         }
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+        setLoading(false);
       } else {
         setAuth(JSON.parse(savedAuth));
       }
@@ -110,6 +113,7 @@ const NavBar = () => {
     >
       <Toolbar>
         <IconButton
+          onClick={goToHomePage}
           edge="start"
           color="inherit"
           aria-label="logo"
@@ -119,7 +123,6 @@ const NavBar = () => {
             src={LostAndPawsPNG}
             alt="Lost & Paws"
             style={{ width: 60, height: 60 }}
-            onClick={goToHomePage}
           />
         </IconButton>
         <Typography

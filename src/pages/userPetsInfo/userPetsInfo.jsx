@@ -13,7 +13,7 @@ import {
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { convertJsonToPet } from "../../utils/helper";
-import { getUserPetsInfo } from "../../services/api";
+import { getUserPetsInfo, updateUserPetLostCancel } from "../../services/api";
 import { QRCodeCanvas } from "qrcode.react";
 import { useNavigate } from "react-router-dom";
 import "./userPetInfo.css";
@@ -24,6 +24,7 @@ const UserPetInfo = () => {
   const [currentIndexes, setCurrentIndexes] = useState({});
   const [showQRCode, setShowQRCode] = useState(false);
   const [qrStringValue, setQrStringValue] = useState("");
+  const [reload, setReload] = useState(false);
 
   const navigate = useNavigate();
 
@@ -83,11 +84,26 @@ const UserPetInfo = () => {
     };
 
     getUserPets();
-  }, []);
+  }, [loading]);
 
   const handleQRCodeClick = (qrString) => {
     setQrStringValue(qrString);
     setShowQRCode(true);
+  };
+
+  const handleLostPetClick = (petId, petName) => {
+    navigate("/user/pet/lost", {
+      state: {
+        petId,
+        petName,
+      },
+    });
+  };
+
+  const handleLostPetCancelClick = async (petId) => {
+    const auth = localStorage.getItem("authData");
+    await updateUserPetLostCancel(auth, { petId });
+    setLoading(true);
   };
 
   if (loading) {
@@ -102,7 +118,7 @@ const UserPetInfo = () => {
 
   if (userPets.length === 0) {
     return (
-      <Box className="box-container">
+      <Box className="box-container background-pet">
         <Typography className="no-pets-text" variant="h6">
           No cuentas con mascotas registradas por el momento.
         </Typography>
@@ -120,6 +136,7 @@ const UserPetInfo = () => {
 
   return (
     <Box
+      className="background-pet"
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -198,7 +215,8 @@ const UserPetInfo = () => {
                   color="text.secondary"
                   textAlign="center"
                 >
-                  <strong>Características:</strong> {pet.characteristics}
+                  <strong>Características:</strong>{" "}
+                  {pet.characteristics.join(", ")}
                 </Typography>
                 <Typography
                   id={"petCard_colors_" + index}
@@ -251,6 +269,55 @@ const UserPetInfo = () => {
                 >
                   Ver QR
                 </Button>
+
+                {!pet.isLost ? (
+                  <Button
+                    variant="contained"
+                    onClick={() => handleLostPetClick(pet.id, pet.name)}
+                    sx={{
+                      marginTop: 2,
+                      width: "100%",
+                      backgroundColor: "#D74444",
+                    }}
+                    disabled={pet.isLost}
+                  >
+                    ¡Me perdí!
+                  </Button>
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: 2,
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={() => handleLostPetCancelClick(pet.id)}
+                      sx={{
+                        width: "48%",
+                        backgroundColor: "#D7C744",
+                      }}
+                      disabled={!pet.isLost}
+                    >
+                      Cancelar búsqueda
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() =>
+                        navigate(`/pet/found/${pet.id}`, {
+                          state: { petId: pet.id },
+                        })
+                      }
+                      sx={{
+                        width: "48%",
+                        backgroundColor: "#4CAF50",
+                      }}
+                    >
+                      Ver Estado
+                    </Button>
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </Grid>

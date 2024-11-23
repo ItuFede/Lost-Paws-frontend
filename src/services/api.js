@@ -110,7 +110,6 @@ export const getUserInfo = async (token) => {
     tokenParse.accessToken,
     tokenParse.idToken
   );
-  console.log("getUserInfo", fetch);
   return fetch;
 };
 
@@ -122,7 +121,30 @@ export const getUserPetsInfo = async (token) => {
     tokenParse.accessToken,
     tokenParse.idToken
   );
-  console.log("getUserPetsInfo", fetch);
+  return fetch;
+};
+
+export const updateUserPetLost = async (token, body) => {
+  const tokenParse = JSON.parse(token);
+  const fetch = await fetchDataFromCognito(
+    "PUT",
+    API_BASE_ENDPOINT + "/user/pet/lost",
+    tokenParse.accessToken,
+    tokenParse.idToken,
+    body
+  );
+  return fetch;
+};
+
+export const updateUserPetLostCancel = async (token, body) => {
+  const tokenParse = JSON.parse(token);
+  const fetch = await fetchDataFromCognito(
+    "PUT",
+    API_BASE_ENDPOINT + "/user/pet/notLost",
+    tokenParse.accessToken,
+    tokenParse.idToken,
+    body
+  );
   return fetch;
 };
 
