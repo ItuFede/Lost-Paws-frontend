@@ -43,7 +43,7 @@
   transform: translateY(-50%);
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.5) !important;
-  color: white !important;
+  color: white !important ;
 }
 
 .qr-code-container {
@@ -58,4 +58,53 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+}
+
+.lost-pet-button {
+  width: 100%;
+  background-color: #e57373 !important;
+}
+
+.lost-pet-delete-button {
+  background-color: #e23f3fe5 !important;
+}
+
+.lost-pet-delete-icon {
+  color: #2b2a2a;
+}
+
+.lost-pet-edit-button {
+  background-color: #4d3fe2ab !important;
+}
+
+.lost-pet-edit-icon {
+  color: #2b2a2a;
+}
+
+.lost-pet-container {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Contenedor de los botones "Ver QR" y "Ver chapita" */
+.lost-pet-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Botones "Ver QR" y "Ver chapita" */
+.lost-pet-half-button {
+  width: 48%;
+}
+
+.lost-pet-view-button {
+  background-color: #64b5f6 !important;
+}
+
+.lost-pet-cancel-button {
+  width: 100%;
+  background-color: #ffd54f !important;
 }

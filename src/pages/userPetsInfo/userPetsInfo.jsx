@@ -9,22 +9,43 @@ import {
   Box,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
+import Slide from "@mui/material/Slide";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { convertJsonToPet } from "../../utils/helper";
 import { getUserPetsInfo, updateUserPetLostCancel } from "../../services/api";
-import { QRCodeCanvas } from "qrcode.react";
 import { useNavigate } from "react-router-dom";
+import QRCode from "../Components/qrCode";
 import "./userPetInfo.css";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import QrCodeIcon from "@mui/icons-material/QrCode";
+import PetsIcon from "@mui/icons-material/Pets";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+
+import { deleteUserPet } from "../../services/api";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const UserPetInfo = () => {
   const [userPets, setUserPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [currentIndexes, setCurrentIndexes] = useState({});
   const [showQRCode, setShowQRCode] = useState(false);
   const [qrStringValue, setQrStringValue] = useState("");
-  const [reload, setReload] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [modalDeletePet, setModalDeletePet] = useState({});
 
   const navigate = useNavigate();
 
@@ -43,6 +64,30 @@ const UserPetInfo = () => {
     }
 
     return age;
+  };
+
+  // Modal:
+  const handleOpen = (petName, petId) => {
+    setModalDeletePet({ petName, petId });
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      const auth = localStorage.getItem("authData");
+      await deleteUserPet(auth, modalDeletePet.petId);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error al eliminar la mascota:", error);
+    } finally {
+      setDeleting(false);
+      setOpen(false);
+    }
   };
 
   const handleNext = (petIndex) => {
@@ -118,12 +163,12 @@ const UserPetInfo = () => {
 
   if (userPets.length === 0) {
     return (
-      <Box className="box-container background-pet">
+      <Box className="box-container ">
         <Typography className="no-pets-text" variant="h6">
           No cuentas con mascotas registradas por el momento.
         </Typography>
         <Button
-          id="addPetButton"
+          data-testid="addPetButton"
           variant="contained"
           onClick={() => navigate("/pet/register")}
           className="add-pet-button"
@@ -136,7 +181,7 @@ const UserPetInfo = () => {
 
   return (
     <Box
-      className="background-pet"
+      className=""
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -144,7 +189,7 @@ const UserPetInfo = () => {
       sx={{ marginTop: 4 }}
     >
       <Button
-        id="addPetButton"
+        data-testid="addPetButton"
         variant="contained"
         onClick={() => navigate("/pet/register")}
         sx={{ marginBottom: 2 }}
@@ -156,13 +201,44 @@ const UserPetInfo = () => {
         {userPets.map((pet, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card
-              id={"petCard_" + index}
+              data-testid={"petCard_" + index}
               variant="outlined"
               sx={{ margin: 2, borderRadius: 2, boxShadow: 3 }}
             >
               <CardContent>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  {/* Botón de editar */}
+                  <IconButton
+                    aria-label="editar"
+                    className="lost-pet-edit-button"
+                    data-testid={"petCard_edit_" + index}
+                    onClick={() =>
+                      navigate(`/pet/edit/`, {
+                        state: { pet },
+                      })
+                    }
+                  >
+                    <EditIcon className="lost-pet-edit-icon" />
+                  </IconButton>
+
+                  {/* Botón de eliminar */}
+                  <IconButton
+                    aria-label="eliminar"
+                    className="lost-pet-delete-button"
+                    data-testid={"petCard_delete_" + index}
+                    onClick={() => handleOpen(pet.name, pet.id)}
+                  >
+                    <DeleteIcon className="lost-pet-delete-icon" />
+                  </IconButton>
+                </div>
                 <Typography
-                  id={"petCard_name_" + index}
+                  data-testid={"petCard_name_" + index}
                   variant="h5"
                   component="div"
                   sx={{ fontWeight: "bold", textAlign: "center" }}
@@ -170,7 +246,7 @@ const UserPetInfo = () => {
                   {pet.name}
                 </Typography>
                 <Typography
-                  id={"petCard_animal_" + index}
+                  data-testid={"petCard_animal_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -178,7 +254,7 @@ const UserPetInfo = () => {
                   <strong>Animal:</strong> {pet.animal}
                 </Typography>
                 <Typography
-                  id={"petCard_breed_" + index}
+                  data-testid={"petCard_breed_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -186,7 +262,7 @@ const UserPetInfo = () => {
                   <strong>Raza:</strong> {pet.breed}
                 </Typography>
                 <Typography
-                  id={"petCard_age_" + index}
+                  data-testid={"petCard_age_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -194,7 +270,7 @@ const UserPetInfo = () => {
                   <strong>Edad:</strong> {calculateAge(pet.age)} años
                 </Typography>
                 <Typography
-                  id={"petCard_sex_" + index}
+                  data-testid={"petCard_sex_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -202,7 +278,7 @@ const UserPetInfo = () => {
                   <strong>Sexo:</strong> {pet.sex}
                 </Typography>
                 <Typography
-                  id={"petCard_size_" + index}
+                  data-testid={"petCard_size_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -210,7 +286,7 @@ const UserPetInfo = () => {
                   <strong>Tamaño:</strong> {pet.size}
                 </Typography>
                 <Typography
-                  id={"petCard_characteristic_" + index}
+                  data-testid={"petCard_characteristic_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -219,7 +295,7 @@ const UserPetInfo = () => {
                   {pet.characteristics.join(", ")}
                 </Typography>
                 <Typography
-                  id={"petCard_colors_" + index}
+                  data-testid={"petCard_colors_" + index}
                   variant="body2"
                   color="text.secondary"
                   textAlign="center"
@@ -227,7 +303,6 @@ const UserPetInfo = () => {
                   <strong>Colores Generales:</strong>{" "}
                   {pet.generalColor.join(", ")}
                 </Typography>
-
                 <Box sx={{ marginTop: 3, position: "relative" }}>
                   <IconButton
                     onClick={() => handlePrev(index)}
@@ -242,7 +317,7 @@ const UserPetInfo = () => {
                       src={
                         pet.images && pet.images.length > 0
                           ? pet.images[currentIndexes[index]]
-                          : "src/assets/images/no-photo.png"
+                          : "../src/assets/images/no-photo.png"
                       }
                       alt={`Imagen ${currentIndexes[index] + 1}`}
                       className="image"
@@ -258,74 +333,100 @@ const UserPetInfo = () => {
                   </IconButton>
                 </Box>
 
-                <Button
-                  variant="contained"
-                  onClick={() =>
-                    handleQRCodeClick(
-                      "http://localhost:5173/#/pet/found/" + pet.id
-                    )
-                  }
-                  sx={{ marginTop: 2, width: "100%" }}
-                >
-                  Ver QR
-                </Button>
-
-                {!pet.isLost ? (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleLostPetClick(pet.id, pet.name)}
-                    sx={{
-                      marginTop: 2,
-                      width: "100%",
-                      backgroundColor: "#D74444",
-                    }}
-                    disabled={pet.isLost}
-                  >
-                    ¡Me perdí!
-                  </Button>
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginTop: 2,
-                    }}
-                  >
+                <Box className="lost-pet-container">
+                  {/* Contenedor de "Ver QR" y "Ver chapita" */}
+                  <Box className="lost-pet-row">
                     <Button
+                      startIcon={<QrCodeIcon />}
                       variant="contained"
-                      onClick={() => handleLostPetCancelClick(pet.id)}
-                      sx={{
-                        width: "48%",
-                        backgroundColor: "#D7C744",
-                      }}
-                      disabled={!pet.isLost}
+                      onClick={() =>
+                        handleQRCodeClick(
+                          "http://localhost:5173/#/pet/found/" + pet.id
+                        )
+                      }
+                      className="lost-pet-half-button"
                     >
-                      Cancelar búsqueda
+                      Ver QR
                     </Button>
                     <Button
+                      startIcon={<PetsIcon />}
                       variant="contained"
                       onClick={() =>
                         navigate(`/pet/found/${pet.id}`, {
                           state: { petId: pet.id },
                         })
                       }
-                      sx={{
-                        width: "48%",
-                        backgroundColor: "#4CAF50",
-                      }}
+                      className="lost-pet-half-button lost-pet-view-button"
                     >
-                      Ver Estado
+                      Ver chapita
                     </Button>
                   </Box>
-                )}
+
+                  {!pet.isLost && (
+                    <Button
+                      startIcon={<ReportProblemIcon />}
+                      variant="contained"
+                      onClick={() => handleLostPetClick(pet.id, pet.name)}
+                      className="lost-pet-button"
+                      disabled={pet.isLost}
+                    >
+                      ¡Me perdí!
+                    </Button>
+                  )}
+
+                  {pet.isLost && (
+                    <Button
+                      startIcon={<CancelIcon />}
+                      variant="contained"
+                      onClick={() => handleLostPetCancelClick(pet.id)}
+                      className="lost-pet-cancel-button"
+                      disabled={!pet.isLost}
+                    >
+                      Cancelar búsqueda
+                    </Button>
+                  )}
+                </Box>
               </CardContent>
+
+              <Dialog
+                open={open}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleClose}
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle>{`Borrar registro de ${modalDeletePet.petName}`}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText data-testid="alert-dialog-slide-description">
+                    ¿Estás seguro de que quieres borrar esta mascota? Esta
+                    acción no se puede deshacer.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={handleClose}
+                    color="primary_mui"
+                    disabled={deleting}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    id={"modal_delete_pet"}
+                    onClick={handleDelete}
+                    color="primary_mui"
+                    disabled={deleting}
+                  >
+                    {deleting ? <CircularProgress size={24} /> : "Eliminar"}
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Card>
           </Grid>
         ))}
       </Grid>
 
       {showQRCode && (
-        <QRCodeComponent
+        <QRCode
           qrStringValue={qrStringValue}
           onClose={() => setShowQRCode(false)}
         />
@@ -333,14 +434,5 @@ const UserPetInfo = () => {
     </Box>
   );
 };
-
-const QRCodeComponent = ({ qrStringValue, onClose }) => (
-  <Box className="qr-code-container" onClick={onClose}>
-    <QRCodeCanvas value={qrStringValue} size={200} />
-    <Typography variant="h6" color="white" sx={{ marginTop: 2 }}>
-      Escanea el código QR
-    </Typography>
-  </Box>
-);
 
 export default UserPetInfo;

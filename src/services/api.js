@@ -80,10 +80,15 @@ export const getVetLogo = async (id) => {
   return await fetchDataFromAPI("GET", API_GET_ENDPOINT + "/" + id + "/images");
 };
 
-export const authUser = async (code) => {
+export const authUser = async (code, redirecUrl) => {
   return await fetchDataFromAPI(
     "GET",
-    API_BASE_ENDPOINT + "/auth/?code=" + code
+    API_BASE_ENDPOINT +
+      "/auth/?code=" +
+      code +
+      "&" +
+      "redirec_url=" +
+      redirecUrl
   );
 };
 
@@ -159,8 +164,15 @@ export const updateUserInfo = async (token, body) => {
   );
 };
 
-export const updatePet = async (record) => {
-  return await fetchDataFromAPI("PUT", API_PUT_ENDPOINT, record);
+export const updatePet = async (token, body) => {
+  const tokenParse = JSON.parse(token);
+  return await fetchDataFromCognito(
+    "PUT",
+    API_BASE_ENDPOINT + "/user/pet",
+    tokenParse.accessToken,
+    tokenParse.idToken,
+    body
+  );
 };
 
 export const putPetToUser = async (token, body) => {
@@ -171,5 +183,15 @@ export const putPetToUser = async (token, body) => {
     tokenParse.accessToken,
     tokenParse.idToken,
     body
+  );
+};
+
+export const deleteUserPet = async (token, petId) => {
+  const tokenParse = JSON.parse(token);
+  return await fetchDataFromCognito(
+    "DELETE",
+    API_BASE_ENDPOINT + `/user/pet/${petId}`,
+    tokenParse.accessToken,
+    tokenParse.idToken
   );
 };

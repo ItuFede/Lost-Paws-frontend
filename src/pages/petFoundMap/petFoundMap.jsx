@@ -105,7 +105,7 @@ const PetFoundMap = () => {
   }
 
   return (
-    <Container className="background-pet">
+    <Container>
       <ToastContainer />
       <PetInfoMap petData={petData} />
     </Container>

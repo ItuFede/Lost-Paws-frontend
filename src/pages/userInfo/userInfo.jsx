@@ -85,7 +85,7 @@ const UserInfo = () => {
   }
 
   return (
-    <Container maxWidth="sm" className="user-info-container background-pet">
+    <Container maxWidth="sm" className="user-info-container ">
       <Paper elevation={3} className="user-info-paper">
         <Typography variant="h5" gutterBottom>
           Información del Usuario

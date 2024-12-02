@@ -5,6 +5,7 @@ describe("Test E2E", () => {
   it("Registrar una nueva mascota y verificarla", async function () {
     this.timeout(60000);
     let driver;
+    let index = 0;
 
     try {
       driver = await new Builder().forBrowser("chrome").build();
@@ -12,6 +13,13 @@ describe("Test E2E", () => {
 
       const findById = async (id, time = 3000) => {
         return await driver.wait(until.elementLocated(By.id(id)), time);
+      };
+
+      const findByTestId = async (testId, time = 3000) => {
+        return await driver.wait(
+          until.elementLocated(By.css(`[data-testid="${testId}"]`)),
+          time
+        );
       };
 
       const findByName = async (name, time = 3000) => {
@@ -22,7 +30,7 @@ describe("Test E2E", () => {
         return await driver.wait(until.elementLocated(By.xpath(xpath)), time);
       };
 
-      const iniciarSesion = await findById("iniciarSesion");
+      const iniciarSesion = await findByTestId("iniciarSesion");
       iniciarSesion.click();
 
       const emailTextBox = await findById("signInFormUsername");
@@ -37,10 +45,10 @@ describe("Test E2E", () => {
       // WAIT FOR USER LOGIN
       await driver.sleep(3000);
 
-      const userConfigButton = await findById("userConfig");
+      const userConfigButton = await findByTestId("userConfig");
       await userConfigButton.click();
 
-      const userPetButton = await findById("userPetsButton");
+      const userPetButton = await findByTestId("userPetsButton");
       await userPetButton.click();
 
       // Carga de mascotas
@@ -58,7 +66,7 @@ describe("Test E2E", () => {
         generalColor: "Blanco",
       };
 
-      const addPetButton = await findById("addPetButton");
+      const addPetButton = await findByTestId("addPetButton");
       await addPetButton.click();
 
       // Nombre
@@ -66,9 +74,9 @@ describe("Test E2E", () => {
       await nameTextBox.sendKeys(newPet.name);
 
       // Animal
-      const animalSelect = await findById("animal-select");
+      const animalSelect = await findByTestId("animal-select");
       await animalSelect.click();
-      const dogItem = await findById("dogItem");
+      const dogItem = await findByTestId("dogItem");
       await dogItem.click();
 
       // Caracteristicas
@@ -81,7 +89,7 @@ describe("Test E2E", () => {
       await optionCharacteristicsSelect.click();
 
       // Sexo
-      const maleRadio = await findById("maleRadio");
+      const maleRadio = await findByTestId("maleRadio");
       await maleRadio.click();
 
       // Raza
@@ -89,9 +97,9 @@ describe("Test E2E", () => {
       await breedTextBox.sendKeys(newPet.breed);
 
       // Tamaño
-      const sizeSelect = await findById("size-select");
+      const sizeSelect = await findByTestId("size-select");
       await sizeSelect.click();
-      const mediumItem = await findById("mediumItem");
+      const mediumItem = await findByTestId("mediumItem");
       await mediumItem.click();
 
       //Fecha de nacimiento
@@ -109,46 +117,44 @@ describe("Test E2E", () => {
       await optionColorsAutoComplete.click();
 
       // Registrar mascota
-      const registerPetButtom = await findById("registerPetButtom");
+      const registerPetButtom = await findByTestId("registerPetButtom");
       await registerPetButtom.click();
 
       // Carga de mascotas
       await driver.sleep(8000);
 
-      const index = 0;
-
       //Validacion de mascota nueva
-      let petCardName = await findById("petCard_name_" + index);
+      let petCardName = await findByTestId("petCard_name_" + index);
       petCardName = await petCardName.getText();
       console.log("petCardName:::", petCardName);
 
-      let petCardAnimal = await findById("petCard_animal_" + index);
+      let petCardAnimal = await findByTestId("petCard_animal_" + index);
       petCardAnimal = await petCardAnimal.getText();
       console.log("petCardAnimal:::", petCardAnimal);
 
-      let petCardBreed = await findById("petCard_breed_" + index);
+      let petCardBreed = await findByTestId("petCard_breed_" + index);
       petCardBreed = await petCardBreed.getText();
       console.log("petCardBreed:::", petCardBreed);
 
-      let petCardAge = await findById("petCard_age_" + index);
+      let petCardAge = await findByTestId("petCard_age_" + index);
       petCardAge = await petCardAge.getText();
       console.log("petCardAge:::", petCardAge);
 
-      let petCardSex = await findById("petCard_sex_" + index);
+      let petCardSex = await findByTestId("petCard_sex_" + index);
       petCardSex = await petCardSex.getText();
       console.log("petCardSex:::", petCardSex);
 
-      let petCardsize = await findById("petCard_size_" + index);
+      let petCardsize = await findByTestId("petCard_size_" + index);
       petCardsize = await petCardsize.getText();
       console.log("petCardsize:::", petCardsize);
 
-      let petCardCharacteristic = await findById(
+      let petCardCharacteristic = await findByTestId(
         "petCard_characteristic_" + index
       );
       petCardCharacteristic = await petCardCharacteristic.getText();
       console.log("petCardCharacteristic:::", petCardCharacteristic);
 
-      let petCardColors = await findById("petCard_colors_" + index);
+      let petCardColors = await findByTestId("petCard_colors_" + index);
       petCardColors = await petCardColors.getText();
       console.log("petCardColors:::", petCardColors);
 
@@ -189,10 +195,23 @@ describe("Test E2E", () => {
         "petCardCharacteristic"
       );
       assertAndLog(petCardColors, cardProperties.generalColor, "petCardColors");
+
+      const petCardDelete = await findByTestId("petCard_delete_" + index);
+      await petCardDelete.click();
+
+      await driver.wait(
+        until.elementIsVisible(driver.findElement(By.id("modal_delete_pet"))),
+        10000
+      );
+      const modalDelete = await findById("modal_delete_pet");
+      await driver.wait(until.elementIsEnabled(modalDelete), 10000); //Tengo que esperar porque como tiene una animacion no encuentra el boton, un meme
+      await modalDelete.click();
+      await driver.sleep(4000);
+
+      console.log("Record deleted successfully");
     } catch (error) {
       throw error;
     } finally {
-      // TODO: Delete PET
       await driver.quit();
     }
   });

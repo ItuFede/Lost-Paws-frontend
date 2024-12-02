@@ -30,15 +30,15 @@ const createMarkerIcon = (number) => {
 };
 
 const PetInfoMap = ({ petData }) => {
-  const orderPetsPositions = petData
-    .getLocations()
-    .sort((a, b) => a.timestamp - b.timestamp);
-  const positions = orderPetsPositions.map((loc) => [
-    loc.latitude,
-    loc.longitude,
-  ]);
-
+  let positions = [];
   const missingReport = petData.missingReport;
+
+  if (petData.isLost && missingReport) {
+    const orderPetsPositions = petData
+      .getLocations()
+      .sort((a, b) => a.timestamp - b.timestamp);
+    positions = orderPetsPositions.map((loc) => [loc.latitude, loc.longitude]);
+  }
 
   return (
     <Box className="pet-info-container">

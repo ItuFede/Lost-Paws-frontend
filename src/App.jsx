@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import theme from "./styles/theme";
@@ -12,6 +12,7 @@ import UserInfo from "./pages/userInfo/userInfo";
 import UserPetsInfo from "./pages/userPetsInfo/userPetsInfo";
 import PetFoundMap from "./pages/petFoundMap/petFoundMap";
 import RegisterPetForm from "./pages/registerPetForm/registerPetForm";
+import UpdatePetForm from "./pages/updatePetForm/updatePetForm";
 import LostPetForm from "./pages/lostPetForm/lostPetForm";
 import NotFound from "./pages/notFound/notFound";
 import NavBar from "./pages/Components/navBar";
@@ -22,6 +23,8 @@ import "./App.css";
 
 function App() {
   const [loading, setLoading] = useState(false);
+
+  const HOST = "http://localhost:5173/";
 
   return (
     <ThemeProvider theme={theme}>
@@ -46,21 +49,50 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route
                 path="/user"
-                element={<ProtectedRoute element={<UserInfo />} />}
+                element={
+                  <ProtectedRoute
+                    element={<UserInfo />}
+                    redirectUrl={`${HOST}user/`}
+                  />
+                }
               />
               <Route
                 path="/user/pet"
-                element={<ProtectedRoute element={<UserPetsInfo />} />}
+                element={
+                  <ProtectedRoute
+                    element={<UserPetsInfo />}
+                    redirectUrl={`${HOST}/user/pet`}
+                  />
+                }
               />
               <Route
                 path="/pet/register"
-                element={<ProtectedRoute element={<RegisterPetForm />} />}
+                element={
+                  <ProtectedRoute
+                    element={<RegisterPetForm />}
+                    redirectUrl={`${HOST}/pet/register`}
+                  />
+                }
+              />
+              <Route
+                path="/pet/edit"
+                element={
+                  <ProtectedRoute
+                    element={<UpdatePetForm />}
+                    redirectUrl={`${HOST}/pet/edit`}
+                  />
+                }
               />
               <Route path="/pet/lost" element={<PetsMap />} />
               <Route path="/vet" element={<VetsMap />} />
               <Route
                 path="/user/pet/lost"
-                element={<ProtectedRoute element={<LostPetForm />} />}
+                element={
+                  <ProtectedRoute
+                    element={<LostPetForm />}
+                    redirectUrl={`${HOST}/user/pet/lost`}
+                  />
+                }
               />
               <Route path="pet/found/:petId" element={<PetFoundMap />} />
               <Route path="*" element={<NotFound />} />

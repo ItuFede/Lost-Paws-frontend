@@ -8,7 +8,7 @@ import "./home.css";
 
 const Home = () => {
   return (
-    <Box className="home-container background-pet">
+    <Box className="home-container ">
       <Typography variant="h3" component="h1" className="home-title">
         ¡Lost & Paws!
       </Typography>

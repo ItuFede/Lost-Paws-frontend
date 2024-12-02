@@ -33,14 +33,32 @@ const NavBar = ({ setLoading }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  let token = localStorage.getItem("authData");
+
   useEffect(() => {
+    setAuth(token);
+  }, [token]);
+
+  useEffect(() => {
+    function doesNotContainUserOrPetWords(input) {
+      const forbiddenWords = /user|pet/i;
+      return !forbiddenWords.test(input);
+    }
+
     const authorizeUser = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const authorizationCode = urlParams.get("code");
       const savedAuth = localStorage.getItem("authData");
-      if (authorizationCode && !savedAuth) {
+      if (
+        authorizationCode &&
+        !savedAuth &&
+        doesNotContainUserOrPetWords(window.location.href)
+      ) {
         setLoading(true);
-        const response = await authUser(authorizationCode);
+        const response = await authUser(
+          authorizationCode,
+          window.location.origin + "/"
+        );
         if (response?.accessToken) {
           setAuth(response);
           localStorage.setItem("authData", JSON.stringify(response));
@@ -161,7 +179,10 @@ const NavBar = ({ setLoading }) => {
           <MenuItem onClick={goToVetsPage}>Veterinarias</MenuItem>
           {auth && <MenuItem onClick={handleGoToUserInfo}>Perfil</MenuItem>}
           {auth && (
-            <MenuItem id="userPetsButton" onClick={handleGoToUserPetsInfo}>
+            <MenuItem
+              data-testid="userPetsButton"
+              onClick={handleGoToUserPetsInfo}
+            >
               Mis mascotas
             </MenuItem>
           )}
@@ -174,7 +195,7 @@ const NavBar = ({ setLoading }) => {
               Cerrar Sesión
             </MenuItem>
           ) : (
-            <MenuItem id="iniciarSesion" onClick={handleLogin}>
+            <MenuItem data-testid="iniciarSesion" onClick={handleLogin}>
               <ListItemIcon>
                 <LoginIcon fontSize="small" />
               </ListItemIcon>
@@ -230,7 +251,7 @@ const NavBar = ({ setLoading }) => {
           {auth ? (
             <Tooltip title="Abrir configuraciones">
               <IconButton
-                id="userConfig"
+                data-testid="userConfig"
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0 }}
               >
@@ -239,7 +260,7 @@ const NavBar = ({ setLoading }) => {
             </Tooltip>
           ) : (
             <Button
-              id="iniciarSesion"
+              data-testid="iniciarSesion"
               color="inherit"
               onClick={handleLogin}
               startIcon={<LoginIcon />}
@@ -263,7 +284,7 @@ const NavBar = ({ setLoading }) => {
           )}
           <Menu
             sx={{ mt: "45px" }}
-            id="menu-appbar"
+            data-testid="menu-appbar"
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: "top",
@@ -284,7 +305,10 @@ const NavBar = ({ setLoading }) => {
               Perfil
             </MenuItem>
             <Divider />
-            <MenuItem id="userPetsButton" onClick={handleGoToUserPetsInfo}>
+            <MenuItem
+              data-testid="userPetsButton"
+              onClick={handleGoToUserPetsInfo}
+            >
               <ListItemIcon>
                 <PetsIcon fontSize="small" />
               </ListItemIcon>

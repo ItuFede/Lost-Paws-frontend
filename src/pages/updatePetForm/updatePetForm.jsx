@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -17,8 +17,8 @@ import {
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import ImageUpload from "../Components/imageUpload";
-import { putPetToUser } from "../../services/api";
-import { useNavigate } from "react-router-dom";
+import { updatePet } from "../../services/api";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const petCharacteristics = [
   "Tímido",
@@ -38,7 +38,10 @@ const generalColors = [
   "Dorado",
 ];
 
-const RegisterPetForm = () => {
+const UpdatePetForm = () => {
+  const location = useLocation();
+  const { state } = location;
+
   const [formData, setFormData] = useState({
     birthDate: null,
     animal: "",
@@ -55,6 +58,19 @@ const RegisterPetForm = () => {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (state.pet) {
+      console.log("TEST STATE:::", state);
+      setFormData({
+        ...formData,
+        ...state.pet,
+        colors: state.pet.generalColor,
+        birthDate: new Date(state.pet.age),
+        images: [],
+      });
+    }
+  }, [state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -115,10 +131,8 @@ const RegisterPetForm = () => {
 
     console.log("validationErrors:::", validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Datos del formulario de mascota:", formData);
       const auth = localStorage.getItem("authData");
-      const register = await putPetToUser(auth, formData);
-      console.log("register:::", register);
+      await updatePet(auth, formData);
       navigate("/user/pet");
     }
   };
@@ -137,7 +151,7 @@ const RegisterPetForm = () => {
         }}
       >
         <Typography variant="h4" gutterBottom textAlign="center">
-          Registrar Nueva Mascota
+          Editar Mascota
         </Typography>
 
         <Grid container spacing={2}>
@@ -344,7 +358,25 @@ const RegisterPetForm = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
+            {/* Botón Cancelar */}
+            <Button
+              data-testid="cancelButton"
+              sx={{
+                backgroundColor: "#e23f3fe5",
+                color: "#000000",
+                "&:hover": {
+                  backgroundColor: "#c93030",
+                },
+              }}
+              fullWidth
+              onClick={() => navigate("/user/pet")} // Define tu función para manejar el clic en el botón "Cancelar"
+            >
+              Cancelar
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            {/* Botón Editar Mascota */}
             <Button
               data-testid="registerPetButtom"
               variant="contained"
@@ -352,7 +384,7 @@ const RegisterPetForm = () => {
               color="primary"
               fullWidth
             >
-              Registrar Mascota
+              Aceptar
             </Button>
           </Grid>
         </Grid>
@@ -361,4 +393,4 @@ const RegisterPetForm = () => {
   );
 };
 
-export default RegisterPetForm;
+export default UpdatePetForm;

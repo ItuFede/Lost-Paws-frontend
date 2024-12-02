@@ -169,7 +169,7 @@ const PetsMap = () => {
       </Box>
 
       <Box
-        className="side-panel background-pet"
+        className="side-panel"
         style={{ "--side-panel-display": isMobile ? "none" : "flex" }}
       >
         <MarkerList markers={filteredMarkers} onCardClick={handleCardClick} />

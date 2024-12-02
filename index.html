@@ -5,6 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/ico.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lost & Paws</title>
+    <style>
+      body {
+        margin: 0;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("./src/assets/images/background.png");
+        background-repeat: repeat;
+        background-position: top left;
+        opacity: 0.03;
+        z-index: -1;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
