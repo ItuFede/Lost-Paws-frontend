@@ -62,11 +62,19 @@
 
 .lost-pet-button {
   width: 100%;
-  background-color: #e57373 !important;
+  background-color: #ffca63 !important;
+}
+
+.lost-pet-button:hover {
+  background-color: #f7b125 !important;
 }
 
 .lost-pet-delete-button {
-  background-color: #e23f3fe5 !important;
+  background-color: #ffca63 !important;
+}
+
+.lost-pet-delete-button:hover {
+  background-color: #f7b125 !important;
 }
 
 .lost-pet-delete-icon {
@@ -74,7 +82,11 @@
 }
 
 .lost-pet-edit-button {
-  background-color: #4d3fe2ab !important;
+  background-color: #ffca63 !important;
+}
+
+.lost-pet-edit-button:hover {
+  background-color: #f7b125 !important;
 }
 
 .lost-pet-edit-icon {
@@ -100,11 +112,15 @@
   width: 48%;
 }
 
-.lost-pet-view-button {
-  background-color: #64b5f6 !important;
+.lost-pet-cancel-button {
+  background-color: #ffcb631f !important;
+  color: #ffca63 !important;
+  border: 2px solid #ffca63 !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+  box-shadow: none !important;
 }
 
-.lost-pet-cancel-button {
-  width: 100%;
-  background-color: #ffd54f !important;
+.lost-pet-cancel-button:hover {
+  background-color: #fcbe4131 !important;
 }

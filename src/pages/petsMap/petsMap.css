@@ -15,7 +15,7 @@
 
 .map-container {
   position: relative;
-  height: 86vh;
+  height: 88vh !important;
 }
 
 .side-panel {

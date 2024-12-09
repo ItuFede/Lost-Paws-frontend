@@ -67,7 +67,7 @@ const UpdatePetForm = () => {
         ...state.pet,
         colors: state.pet.generalColor,
         birthDate: new Date(state.pet.age),
-        images: [],
+        images: state.pet.images,
       });
     }
   }, [state]);

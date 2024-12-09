@@ -108,18 +108,23 @@ const ImageUpload = ({ images, setImages, error }) => {
           {images.map((image, index) => (
             <Box key={index} className="upload-image-container">
               <img
-                src={image.preview}
+                src={
+                  typeof image === "object" && image.preview
+                    ? image.preview
+                    : image
+                }
                 alt={`Vista previa ${index + 1}`}
                 className="upload-image"
               />
-              <Button
+
+              <button
+                className="remove-button"
                 size="small"
                 color="secondary"
                 onClick={() => handleRemoveImage(index)}
-                className="remove-button"
               >
                 X
-              </Button>
+              </button>
             </Box>
           ))}
         </Box>

@@ -12,6 +12,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "./Styles/markerInfoDialog.css";
+import { Margin } from "@mui/icons-material";
 
 const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,15 +53,27 @@ const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
           {modalContent.name + " " + "(" + modalContent.animal + ")"}
         </Typography>
         <Typography variant="body1">
-          <strong>Teléfono:</strong> {modalContent.phone}
+          <strong>Número contacto:</strong> {modalContent.phone}
         </Typography>
         <Typography variant="body1">
-          <strong>Descripción:</strong> {modalContent.description}
+          <strong>Información:</strong> {modalContent.description}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
-          <strong>Ubicación:</strong> Lat:{" "}
-          {modalContent.position ? modalContent.position[0] : ""}, Lng:{" "}
-          {modalContent.position ? modalContent.position[1] : ""}
+        <Typography variant="body1">
+          <strong>Sexo:</strong> {modalContent.sex}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Tamaño:</strong> {modalContent.size}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Colores:</strong> {modalContent.colors?.join(", ")}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Tratamientos médicos:</strong>{" "}
+          {modalContent.medicalTreatment || "No especificado."}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Características:</strong>{" "}
+          {modalContent.characteristics?.join(", ") || "No especificado."}
         </Typography>
 
         {modalContent.images && modalContent.images.length > 0 && (
@@ -88,6 +101,12 @@ const MarkerInfoDialog = ({ open, onClose, modalContent }) => {
             </IconButton>
           </Box>
         )}
+
+        <Typography variant="body2" color="textSecondary" sx={{ margin: 1 }}>
+          <strong>Ubicación:</strong> Lat:{" "}
+          {modalContent.position ? modalContent.position[0] : ""}, Lng:{" "}
+          {modalContent.position ? modalContent.position[1] : ""}
+        </Typography>
       </DialogContent>
     </Dialog>
   );

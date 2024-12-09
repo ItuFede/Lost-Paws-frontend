@@ -303,6 +303,7 @@ const UserPetInfo = () => {
                   <strong>Colores Generales:</strong>{" "}
                   {pet.generalColor.join(", ")}
                 </Typography>
+
                 <Box sx={{ marginTop: 3, position: "relative" }}>
                   <IconButton
                     onClick={() => handlePrev(index)}
@@ -356,7 +357,7 @@ const UserPetInfo = () => {
                           state: { petId: pet.id },
                         })
                       }
-                      className="lost-pet-half-button lost-pet-view-button"
+                      className="lost-pet-half-button"
                     >
                       Ver chapita
                     </Button>

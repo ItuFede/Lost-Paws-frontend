@@ -110,6 +110,11 @@ const PetsMap = () => {
         zone: pet.town,
         animal: pet.getAnimalType(),
         description: pet.getMissingInfo(),
+        sex: pet.sex,
+        colors: pet.generalColor,
+        size: pet.size,
+        characteristics: pet.characteristics,
+        medicalTreatment: pet.medicalTreatment,
         phone: pet.phoneNumberOwner,
         images: [],
       }));

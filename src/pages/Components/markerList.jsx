@@ -29,7 +29,7 @@ const MarkerList = ({ markers, onCardClick }) => {
             <Typography variant="h6">Nombre: {marker.name}</Typography>
             <Typography variant="body1">Animal: {marker.animal}</Typography>
             <Typography variant="body1">Telefono: {marker.phone}</Typography>
-            <Typography variant="body2">Zona: {marker.zone}</Typography>
+            {/* <Typography variant="body2">Zona: {marker.zone}</Typography> */}
           </CardContent>
           <CardActions>
             <Button
